@@ -10,7 +10,7 @@ class ApiClient(
     private val tokenStorage: TokenStorage
 ) {
     // IMPORTANT for emulator:
-    private val baseUrl = "http://10.0.2.2:8000/"
+    private val baseUrl = "http://192.168.77.254:8000/"
 
     private fun logging(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
