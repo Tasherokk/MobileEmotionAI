@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.emotionsai.R
+import com.example.emotionsai.data.remote.UserRole
 import com.example.emotionsai.databinding.ActivityMainBinding
 import com.example.emotionsai.di.ServiceLocator
 import com.example.emotionsai.ui.login.LoginActivity
@@ -17,7 +19,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // Guard: if tokens missing -> back to login
-        if (!ServiceLocator.tokenStorage(this).isLoggedIn()) {
+        val storage = ServiceLocator.tokenStorage(this)
+        if (!storage.isLoggedIn()) {
             val i = Intent(this, LoginActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(i)
@@ -28,7 +31,28 @@ class MainActivity : AppCompatActivity() {
         vb = ActivityMainBinding.inflate(layoutInflater)
         setContentView(vb.root)
 
+        // ✅ 1) определяем роль
+        val role = UserRole.from(storage.getRole() ?: "EMPLOYEE")
+
+        // ✅ 2) находим NavController
         val navHost = supportFragmentManager.findFragmentById(vb.navHost.id) as NavHostFragment
-        vb.bottomNav.setupWithNavController(navHost.navController)
+        val navController = navHost.navController
+
+        // ✅ 3) подставляем нужный nav graph
+        val graphRes = if (role == UserRole.HR) {
+            R.navigation.nav_hr
+        } else {
+            R.navigation.nav_employee
+        }
+        navController.setGraph(graphRes)
+
+        // ✅ 4) подставляем нужное меню bottom nav
+        vb.bottomNav.menu.clear()
+        vb.bottomNav.inflateMenu(
+            if (role == UserRole.HR) R.menu.bottom_hr else R.menu.bottom_employee
+        )
+
+        // ✅ 5) связываем bottom nav с navController
+        vb.bottomNav.setupWithNavController(navController)
     }
 }

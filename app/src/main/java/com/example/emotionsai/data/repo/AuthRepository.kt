@@ -13,7 +13,7 @@ class AuthRepository(
     suspend fun login(username: String, password: String): Result<Unit> {
         return try {
             val tokens = api.login(LoginRequest(username.trim().lowercase(), password))
-            tokenStorage.saveTokens(tokens.access, tokens.refresh)
+            tokenStorage.saveTokens(tokens.access, tokens.refresh, tokens.user.role)
             Result.Ok(Unit)
         } catch (e: Exception) {
             Result.Err(e.message ?: "Login failed")
@@ -23,7 +23,7 @@ class AuthRepository(
     suspend fun register(username: String, name: String, password: String): Result<Unit> {
         return try {
             val tokens = api.register(RegisterRequest(username.trim().lowercase(), name, password))
-            tokenStorage.saveTokens(tokens.access, tokens.refresh)
+            tokenStorage.saveTokens(tokens.access, tokens.refresh, tokens.user.role)
             Result.Ok(Unit)
         } catch (e: Exception) {
             Result.Err(e.message ?: "Register failed")

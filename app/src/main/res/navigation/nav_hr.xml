@@ -1,0 +1,15 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_hr"
+    app:startDestination="@id/hrDashboardFragment">
+
+    <fragment
+        android:id="@+id/hrDashboardFragment"
+        android:name="com.example.emotionsai.ui.hr.HrDashboardFragment"
+        android:label="Dashboard"/>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.emotionsai.ui.profile.ProfileFragment"
+        android:label="Profile"/>
+</navigation>

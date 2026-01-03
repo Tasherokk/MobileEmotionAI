@@ -7,11 +7,12 @@ class TokenStorage(context: Context) {
 
     fun getAccess(): String? = sp.getString("access", null)
     fun getRefresh(): String? = sp.getString("refresh", null)
-
-    fun saveTokens(access: String, refresh: String) {
+    fun getRole(): String? = sp.getString("role", null)
+    fun saveTokens(access: String, refresh: String, role: String) {
         sp.edit()
             .putString("access", access)
             .putString("refresh", refresh)
+            .putString("role", role)
             .apply()
     }
 
