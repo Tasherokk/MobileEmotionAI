@@ -2,6 +2,7 @@ package com.example.emotionsai.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -54,5 +55,17 @@ class MainActivity : AppCompatActivity() {
 
         // ✅ 5) связываем bottom nav с navController
         vb.bottomNav.setupWithNavController(navController)
+
+        // ✅ 6) скрываем bottom nav для CameraFragment
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.cameraFragment -> {
+                    vb.bottomNav.visibility = View.GONE
+                }
+                else -> {
+                    vb.bottomNav.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.navigation.safeargs)
 }
 
 android {
@@ -61,11 +62,19 @@ dependencies {
     implementation libs.androidx.navigation.fragment.ktx
     implementation libs.androidx.navigation.ui.ktx
 
+    // SwipeRefreshLayout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
     // Retrofit + OkHttp
     implementation libs.retrofit
     implementation libs.converter.gson
     implementation libs.okhttp
     implementation libs.logging.interceptor
+
+    // CameraX
+    implementation libs.androidx.camera.camera2
+    implementation libs.androidx.camera.lifecycle
+    implementation libs.androidx.camera.view
 
     configurations.all {
         resolutionStrategy {
