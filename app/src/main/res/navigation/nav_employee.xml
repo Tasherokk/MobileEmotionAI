@@ -6,7 +6,51 @@
     <fragment
         android:id="@+id/employeeHomeFragment"
         android:name="com.example.emotionsai.ui.employee.EmployeeHomeFragment"
-        android:label="Home"/>
+        android:label="Home">
+        <action
+            android:id="@+id/action_employeeHome_to_camera"
+            app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_employeeHome_to_stats"
+            app:destination="@id/statsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.emotionsai.ui.employee.camera.CameraFragment"
+        android:label="Camera">
+        <action
+            android:id="@+id/action_camera_to_result"
+            app:destination="@id/resultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.example.emotionsai.ui.employee.result.ResultFragment"
+        android:label="Result">
+        <argument
+            android:name="emotion"
+            app:argType="string" />
+        <argument
+            android:name="confidence"
+            app:argType="float" />
+        <argument
+            android:name="top3"
+            app:argType="string[]" />
+        <action
+            android:id="@+id/action_result_to_employeeHome"
+            app:destination="@id/employeeHomeFragment"
+            app:popUpTo="@id/employeeHomeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_result_to_stats"
+            app:destination="@id/statsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/statsFragment"
+        android:name="com.example.emotionsai.ui.employee.stats.StatsFragment"
+        android:label="My Statistics" />
 
     <fragment
         android:id="@+id/profileFragment"

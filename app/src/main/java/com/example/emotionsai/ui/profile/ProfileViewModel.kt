@@ -23,8 +23,8 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
     private val _error = MutableLiveData("")
     val error: LiveData<String> = _error
 
-    private val _forceLogout = MutableLiveData(false)
-    val forceLogout: LiveData<Boolean> = _forceLogout
+    private val _forceLogout = MutableLiveData<Boolean?>(null)
+    val forceLogout: LiveData<Boolean?> = _forceLogout
 
     fun loadMe() {
         _error.value = ""
@@ -34,8 +34,6 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 is Result.Ok -> _me.value = r.value
                 is Result.Err -> {
                     _error.value = r.message
-                    // Если refresh тоже протух — authenticator вернёт null, запрос останется 401.
-                    // Упростим: при ошибке профиля можно предложить logout.
                 }
             }
             _loading.value = false
@@ -45,5 +43,9 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
     fun logout() {
         authRepo.logout()
         _forceLogout.value = true
+    }
+    
+    fun logoutHandled() {
+        _forceLogout.value = null
     }
 }
