@@ -18,7 +18,7 @@ class TokenAuthenticator(
 
     override fun authenticate(route: Route?, response: Response): Request? {
         // Avoid infinite loops: if we already tried with refreshed token and still 401
-        if (responseCount(response) >= 2) return null
+        if (responseCount(response) >= 3) return null
 
         val refresh = tokenStorage.getRefresh() ?: return null
 

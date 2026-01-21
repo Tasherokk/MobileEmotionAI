@@ -14,7 +14,7 @@ class ApiClient(
 
     private fun logging(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = HttpLoggingInterceptor.Level.HEADERS // Только заголовки, без тела
         }
     }
 
@@ -42,6 +42,9 @@ class ApiClient(
             .addInterceptor(logging())
             .addInterceptor(AuthInterceptor(tokenStorage))
             .authenticator(TokenAuthenticator(tokenStorage, refreshApi))
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
             .build()
     }
 

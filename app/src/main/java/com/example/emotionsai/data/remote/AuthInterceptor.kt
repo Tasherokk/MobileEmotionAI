@@ -1,5 +1,6 @@
 package com.example.emotionsai.data.remote
 
+import android.util.Log
 import com.example.emotionsai.data.local.TokenStorage
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -10,6 +11,9 @@ class AuthInterceptor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val access = tokenStorage.getAccess()
+        
+        Log.d("AuthInterceptor", "Request: ${chain.request().url}")
+        Log.d("AuthInterceptor", "Has token: ${!access.isNullOrBlank()}")
 
         val req = if (!access.isNullOrBlank()) {
             chain.request().newBuilder()
