@@ -174,7 +174,7 @@ interface ApiService {
     @POST("api/auth/refresh")
     suspend fun refresh(@Body req: RefreshRequest): AccessResponse
 
-    @GET("api/me")
+    @GET("api/auth/me")
     suspend fun me(): MeResponse
     
     // ============ References ============
