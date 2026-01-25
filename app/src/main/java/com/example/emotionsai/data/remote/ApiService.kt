@@ -161,6 +161,14 @@ data class HrByUserResponse(
     val users: List<UserStats>,
     val filters: Map<String, String?>
 )
+// ==================== Face Auth Models ====================
+data class PhotoLoginResponse(
+    val verdict: String,   // "YES" | "NO"
+    val detail: String
+) {
+    val isApproved: Boolean
+        get() = verdict.equals("YES", ignoreCase = true)
+}
 
 // ==================== API Interface ====================
 interface ApiService {
@@ -249,4 +257,11 @@ interface ApiService {
     
     @DELETE("api/feedback/hr/events/{id}")
     suspend fun deleteEvent(@Path("id") id: Int)
+    // ============ Face ID Auth ============
+    @Multipart
+    @POST("api/auth/photo-login")
+    suspend fun photoLogin(
+        @Part photo: MultipartBody.Part
+    ): PhotoLoginResponse
+
 }

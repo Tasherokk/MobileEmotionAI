@@ -1,7 +1,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_employee"
-    app:startDestination="@id/employeeHomeFragment">
+    app:startDestination="@id/authGateFragment">
 
     <fragment
         android:id="@+id/employeeHomeFragment"
@@ -56,4 +56,29 @@
         android:id="@+id/profileFragment"
         android:name="com.example.emotionsai.ui.profile.ProfileFragment"
         android:label="Profile"/>
+    <fragment
+        android:id="@+id/faceLoginCameraFragment"
+        android:name="com.example.emotionsai.ui.employee.camera.FaceLoginCameraFragment"
+        android:label="Face Login">
+        <action
+            android:id="@+id/action_faceLogin_to_home"
+            app:destination="@id/employeeHomeFragment"
+            app:popUpTo="@id/employeeHomeFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/authGateFragment"
+        android:name="com.example.emotionsai.ui.faceauth.gate.AuthGateFragment"
+        android:label="Auth Gate">
+        <action
+            android:id="@+id/action_authGate_to_faceLogin"
+            app:destination="@id/faceLoginCameraFragment" />
+        <action
+            android:id="@+id/action_authGate_to_home"
+            app:destination="@id/employeeHomeFragment"
+            app:popUpTo="@id/employeeHomeFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+
 </navigation>

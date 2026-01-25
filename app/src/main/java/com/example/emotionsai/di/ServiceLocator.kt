@@ -1,9 +1,11 @@
 package com.example.emotionsai.di
 
 import android.content.Context
+import com.example.emotionsai.data.local.SettingsStorage
 import com.example.emotionsai.data.local.TokenStorage
 import com.example.emotionsai.data.remote.ApiClient
 import com.example.emotionsai.data.repo.AuthRepository
+import com.example.emotionsai.data.repo.FaceAuthRepository
 import com.example.emotionsai.data.repo.FeedbackRepository
 import com.example.emotionsai.data.repo.HrStatsRepository
 import com.example.emotionsai.data.repo.ReferenceRepository
@@ -17,7 +19,8 @@ object ServiceLocator {
     @Volatile private var feedbackRepo: FeedbackRepository? = null
     @Volatile private var hrStatsRepo: HrStatsRepository? = null
     @Volatile private var referenceRepo: ReferenceRepository? = null
-
+    @Volatile private var faceAuthRepo: FaceAuthRepository? = null
+    @Volatile private var settingsStorage: SettingsStorage? = null
     fun tokenStorage(context: Context): TokenStorage {
         return tokenStorage ?: synchronized(this) {
             tokenStorage ?: TokenStorage(context.applicationContext).also { tokenStorage = it }
@@ -62,6 +65,18 @@ object ServiceLocator {
         return referenceRepo ?: synchronized(this) {
             val api = apiClient(context).api
             ReferenceRepository(api).also { referenceRepo = it }
+        }
+    }
+    fun settingsStorage(context: Context): SettingsStorage {
+        return settingsStorage ?: synchronized(this) {
+            settingsStorage ?: SettingsStorage(context.applicationContext).also { settingsStorage = it }
+        }
+    }
+
+    fun faceAuthRepository(context: Context): FaceAuthRepository {
+        return faceAuthRepo ?: synchronized(this) {
+            val api = apiClient(context).api
+            FaceAuthRepository(api).also { faceAuthRepo = it }
         }
     }
 }

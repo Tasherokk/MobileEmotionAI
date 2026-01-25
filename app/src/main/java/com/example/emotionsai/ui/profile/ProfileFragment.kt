@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import com.example.emotionsai.R
 import com.example.emotionsai.data.remote.UserRole
 import com.example.emotionsai.databinding.FragmentProfileBinding
+import com.example.emotionsai.di.ServiceLocator
 import com.example.emotionsai.ui.login.LoginActivity
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
@@ -91,6 +92,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 requireActivity().finish()
             }
         }
+        ServiceLocator.settingsStorage(requireContext()).setFaceIdEnabled(true)
 
         vm.loadMe()
     }
