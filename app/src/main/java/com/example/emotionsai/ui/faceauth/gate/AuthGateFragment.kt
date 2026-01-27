@@ -9,8 +9,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.emotionsai.R
 import com.example.emotionsai.di.ServiceLocator
 import com.example.emotionsai.ui.login.LoginActivity
-import kotlinx.coroutines.launch
 import com.example.emotionsai.util.Result
+import kotlinx.coroutines.launch
 
 class AuthGateFragment : Fragment(R.layout.fragment_auth_gate) {
 
@@ -20,28 +20,33 @@ class AuthGateFragment : Fragment(R.layout.fragment_auth_gate) {
         val tokenStorage = ServiceLocator.tokenStorage(requireContext())
         val settings = ServiceLocator.settingsStorage(requireContext())
         val userRepo = ServiceLocator.userRepository(requireContext())
+        val authRepo = ServiceLocator.authRepository(requireContext())
 
         if (!tokenStorage.isLoggedIn()) {
             goLogin()
             return
         }
 
-        // Проверяем сессию одним защищённым запросом.
         lifecycleScope.launch {
             when (val r = userRepo.me()) {
                 is Result.Ok -> {
                     if (settings.isFaceIdEnabled()) {
-                        // TODO: заменить action id на твой
                         findNavController().navigate(R.id.action_authGate_to_faceLogin)
                     } else {
-                        // TODO: заменить action id на твой home (в HR и Employee разные)
                         findNavController().navigate(R.id.action_authGate_to_home)
                     }
                 }
                 is Result.Err -> {
-                    // refresh не сработал -> принудительный логин
-                    ServiceLocator.authRepository(requireContext()).logout()
-                    goLogin()
+                    // logout только если реально auth умер
+                    val msg = r.message
+                    val isAuthDead = msg.contains("401") || msg.contains("403") || msg.contains("HTTP_401") || msg.contains("HTTP_403")
+
+                    if (isAuthDead) {
+                        authRepo.logout()
+                        goLogin()
+                    } else {
+                        goLogin()
+                    }
                 }
             }
         }

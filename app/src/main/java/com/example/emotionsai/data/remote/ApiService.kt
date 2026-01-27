@@ -163,8 +163,8 @@ data class HrByUserResponse(
 )
 // ==================== Face Auth Models ====================
 data class PhotoLoginResponse(
-    val verdict: String,   // "YES" | "NO"
-    val detail: String
+    val verdict: String? = null,   // "YES" | "NO"
+    val detail: String? = null
 ) {
     val isApproved: Boolean
         get() = verdict.equals("YES", ignoreCase = true)

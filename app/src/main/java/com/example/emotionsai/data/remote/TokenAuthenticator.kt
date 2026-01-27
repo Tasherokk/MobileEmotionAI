@@ -17,13 +17,17 @@ class TokenAuthenticator(
     private val lock = ReentrantLock()
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        // Avoid infinite loops: if we already tried with refreshed token and still 401
+        val path = response.request.url.encodedPath
+
+        if (path.endsWith("/api/auth/photo-login")) return null
+        if (path.endsWith("/api/auth/refresh")) return null
+
+
         if (responseCount(response) >= 3) return null
 
         val refresh = tokenStorage.getRefresh() ?: return null
 
         lock.withLock {
-            // Another request may have already refreshed access while we waited
             val currentAccess = tokenStorage.getAccess()
             val requestAccess = response.request.header("Authorization")?.removePrefix("Bearer ")?.trim()
 

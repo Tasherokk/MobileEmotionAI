@@ -47,7 +47,8 @@ class FaceLoginCameraFragment : Fragment() {
         if (granted) startCamera()
         else {
             Toast.makeText(requireContext(), "Camera permission is required", Toast.LENGTH_SHORT).show()
-            goLoginHard()
+            // Разрешение не дали — FaceID невозможен -> на логин (по твоей логике)
+            goLoginHard(clearTokens = false)
         }
     }
 
@@ -67,11 +68,10 @@ class FaceLoginCameraFragment : Fragment() {
     }
 
     private fun setupUiForFaceLogin() {
-        // Прячем "event" части — в FaceLogin они не нужны
+        // FaceLogin: event не нужен
         binding.btnSelectEvent.visibility = View.GONE
         binding.tvSelectedEvent.visibility = View.GONE
 
-        // Состояние по умолчанию
         binding.progressBar.visibility = View.GONE
         binding.btnCapture.isEnabled = true
     }
@@ -82,11 +82,12 @@ class FaceLoginCameraFragment : Fragment() {
         binding.btnClose.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Face ID")
-                .setMessage("Выйти из проверки и перейти к логину?")
+                .setMessage("Отменить Face ID проверку и перейти к логину?")
                 .setNegativeButton("Отмена", null)
-                .setPositiveButton("Выйти") { _, _ ->
-                    // FaceAuth — критичный шаг, поэтому выход = логин
-                    goLoginHard()
+                .setPositiveButton("Перейти") { _, _ ->
+                    // Здесь токены НЕ чистим автоматически.
+                    // Пользователь сам отменил проверку.
+                    goLoginHard(clearTokens = false)
                 }
                 .show()
         }
@@ -120,9 +121,9 @@ class FaceLoginCameraFragment : Fragment() {
             try {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(viewLifecycleOwner, cameraSelector, preview, imageCapture)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 Toast.makeText(requireContext(), "Camera initialization failed", Toast.LENGTH_SHORT).show()
-                goLoginHard()
+                goLoginHard(clearTokens = false)
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))
@@ -133,8 +134,7 @@ class FaceLoginCameraFragment : Fragment() {
 
         val photoFile = File(
             requireContext().cacheDir,
-            SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
-                .format(System.currentTimeMillis()) + ".jpg"
+            SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US).format(System.currentTimeMillis()) + ".jpg"
         )
 
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
@@ -148,6 +148,10 @@ class FaceLoginCameraFragment : Fragment() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    if (!photoFile.exists() || photoFile.length() == 0L) {
+                        Toast.makeText(requireContext(), "Фото не сохранилось. Попробуйте ещё раз.", Toast.LENGTH_SHORT).show()
+                        return
+                    }
                     verifyFace(photoFile)
                 }
             }
@@ -155,6 +159,13 @@ class FaceLoginCameraFragment : Fragment() {
     }
 
     private fun verifyFace(photoFile: File) {
+        val stableFile = try {
+            copyToStableDir(photoFile)
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Не удалось подготовить фото: ${e.message}", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         binding.progressBar.visibility = View.VISIBLE
         binding.btnCapture.isEnabled = false
 
@@ -162,13 +173,16 @@ class FaceLoginCameraFragment : Fragment() {
         val authRepo = ServiceLocator.authRepository(requireContext())
 
         lifecycleScope.launch {
-            val result = faceRepo.verifyFace(photoFile)
+            val result = faceRepo.verifyFace(stableFile)
+
+            // можно удалить stableFile после отправки
+            runCatching { stableFile.delete() }
+
+            binding.progressBar.visibility = View.GONE
+            binding.btnCapture.isEnabled = true
 
             when (result) {
                 PhotoVerifyResult.Approved -> {
-                    // ✅ Face OK -> перейти на home в текущем графе
-                    binding.progressBar.visibility = View.GONE
-                    binding.btnCapture.isEnabled = true
                     navigateToHome()
                 }
 
@@ -181,45 +195,63 @@ class FaceLoginCameraFragment : Fragment() {
                     if (attemptsLeft <= 0) {
                         MaterialAlertDialogBuilder(requireContext())
                             .setTitle("Face ID")
-                            .setMessage("Лимит попыток исчерпан. Выполните вход по логину и паролю.")
+                            .setMessage("Лимит попыток исчерпан. Войдите по логину и паролю.")
+                            .setCancelable(false)
                             .setPositiveButton("OK") { _, _ ->
-                                authRepo.logout()
-                                goLoginHard()
+                                ServiceLocator.authRepository(requireContext()).logout()
+                                goLoginHard(clearTokens = false)
                             }
                             .show()
                     } else {
                         MaterialAlertDialogBuilder(requireContext())
                             .setTitle("Face ID")
-                            .setMessage("${result.reason}\nОсталось попыток: $attemptsLeft")
+                            .setMessage("Лицо не совпало.\nОсталось попыток: $attemptsLeft")
                             .setPositiveButton("Повторить", null)
                             .show()
                     }
                 }
 
                 is PhotoVerifyResult.Error -> {
-                    // Тут может быть: нет сети, 401 (refresh failed), и т.д.
-                    binding.progressBar.visibility = View.GONE
-                    binding.btnCapture.isEnabled = true
+                    val code = result.httpCode
 
-                    // Безопаснее: если это auth-ошибка — чистим токены и на логин
-                    authRepo.logout()
-                    Toast.makeText(requireContext(), "Authorization error. Please login again.", Toast.LENGTH_LONG).show()
-                    goLoginHard()
+                    when (code) {
+                        400 -> {
+                            // ❗️не auth-ошибка: обычно multipart field name / формат файла
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle("Face ID")
+                                .setMessage("Сервер не принял фото (400). Проверь имя multipart-поля (photo/file) и попробуй снова.")
+                                .setPositiveButton("OK", null)
+                                .show()
+                        }
+
+                        403 -> {
+                            // ❗️auth реально умер
+                            authRepo.logout()
+                            Toast.makeText(requireContext(), "Session expired. Please login again.", Toast.LENGTH_LONG).show()
+                            goLoginHard(clearTokens = false)
+                        }
+
+                        else -> {
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle("Face ID")
+                                .setMessage("Ошибка проверки лица. Код: ${code ?: "n/a"}. Попробуйте ещё раз.")
+                                .setPositiveButton("OK", null)
+                                .show()
+                        }
+                    }
                 }
             }
         }
     }
 
-    /**
-     * ВАЖНО: в employee и hr графах home разные.
-     * Поэтому делаем два action id (по одному в каждом графе) с одинаковым именем:
-     * action_faceLogin_to_home
-     */
     private fun navigateToHome() {
         findNavController().navigate(R.id.action_faceLogin_to_home)
     }
 
-    private fun goLoginHard() {
+    private fun goLoginHard(clearTokens: Boolean) {
+        if (clearTokens) {
+            ServiceLocator.authRepository(requireContext()).logout()
+        }
         val i = Intent(requireContext(), LoginActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(i)
@@ -231,4 +263,14 @@ class FaceLoginCameraFragment : Fragment() {
         cameraExecutor.shutdown()
         _binding = null
     }
+    private fun copyToStableDir(src: File): File {
+        val dst = File(requireContext().filesDir, "face_login_${System.currentTimeMillis()}.jpg")
+        src.inputStream().use { input ->
+            dst.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+        return dst
+    }
+
 }
