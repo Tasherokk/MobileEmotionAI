@@ -13,7 +13,7 @@ import java.io.File
 class FaceAuthRepository(
     private val api: ApiService
 ) {
-    private val PART_NAME = "photo" // ✅ как ты просила
+    private val PART_NAME = "photo"
     private val gson = com.google.gson.Gson()
     suspend fun verifyFace(photoFile: File): PhotoVerifyResult {
         return try {
