@@ -52,7 +52,19 @@
     <fragment
         android:id="@+id/hrRequestsFragment"
         android:name="com.example.emotionsai.ui.hr.requests.HrRequestsFragment"
-        android:label="Requests" />
+        android:label="Requests" >
+        <action
+            android:id="@+id/action_hrRequestsFragment_to_hrRequestDetailsFragment"
+            app:destination="@id/hrRequestDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hrRequestDetailsFragment"
+        android:name="com.example.emotionsai.ui.hr.requests.HrRequestDetailsFragment"
+        android:label="Request details">
+        <argument
+            android:name="requestId"
+            app:argType="integer" />
+    </fragment>
     <fragment
         android:id="@+id/faceLoginCameraFragment"
         android:name="com.example.emotionsai.ui.employee.camera.FaceLoginCameraFragment"

@@ -11,11 +11,17 @@ import com.example.emotionsai.data.repo.EventRepository
 import com.example.emotionsai.data.repo.FaceAuthRepository
 import com.example.emotionsai.data.repo.FeedbackRepository
 import com.example.emotionsai.data.repo.ReferenceRepository
+import com.example.emotionsai.data.repo.RequestRepository
 import com.example.emotionsai.data.repo.UserRepository
 import com.example.emotionsai.ui.employee.events.EmployeeEventsViewModel
+import com.example.emotionsai.ui.employee.requests.CreateRequestViewModel
+import com.example.emotionsai.ui.employee.requests.EmployeeRequestDetailsViewModel
+import com.example.emotionsai.ui.employee.requests.EmployeeRequestsViewModel
 import com.example.emotionsai.ui.hr.analytics.HrAnalyticsViewModel
 import com.example.emotionsai.ui.hr.events.CreateEventViewModel
 import com.example.emotionsai.ui.hr.events.HrEventsViewModel
+import com.example.emotionsai.ui.hr.requests.HrRequestDetailsViewModel
+import com.example.emotionsai.ui.hr.requests.HrRequestsViewModel
 
 object ServiceLocator {
     @Volatile private var tokenStorage: TokenStorage? = null
@@ -27,6 +33,7 @@ object ServiceLocator {
     @Volatile private var faceAuthRepo: FaceAuthRepository? = null
     @Volatile private var settingsStorage: SettingsStorage? = null
     @Volatile private var eventRepository: EventRepository? = null
+    @Volatile private var requestRepo: RequestRepository? = null
     fun tokenStorage(context: Context): TokenStorage {
         return tokenStorage ?: synchronized(this) {
             tokenStorage ?: TokenStorage(context.applicationContext).also { tokenStorage = it }
@@ -126,6 +133,45 @@ object ServiceLocator {
             return HrEventsViewModel(repo) as T
         }
     }
+    fun requestRepository(context: Context): RequestRepository {
+        return requestRepo ?: synchronized(this) {
+            val api = apiClient(context).api
+            RequestRepository(api).also { requestRepo = it }
+        }
+    }
+    fun employeeRequestsVMFactory(ctx: Context) = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            val repo = requestRepository(ctx)
+            return EmployeeRequestsViewModel(repo) as T
+        }
+    }
 
+    fun createRequestVMFactory(ctx: Context) = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            val repo = requestRepository(ctx)
+            return CreateRequestViewModel(repo) as T
+        }
+    }
+
+    fun employeeRequestDetailsVMFactory(ctx: Context) = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            val repo = requestRepository(ctx)
+            return EmployeeRequestDetailsViewModel(repo) as T
+        }
+    }
+
+    fun hrRequestsVMFactory(ctx: Context) = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            val repo = requestRepository(ctx)
+            return HrRequestsViewModel(repo) as T
+        }
+    }
+
+    fun hrRequestDetailsVMFactory(ctx: Context) = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            val repo = requestRepository(ctx)
+            return HrRequestDetailsViewModel(repo) as T
+        }
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.example.emotionsai.ui.hr.requests
+package com.example.emotionsai.ui.employee.requests
 
 import android.os.Bundle
 import android.view.View
@@ -8,26 +8,26 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.emotionsai.R
-import com.example.emotionsai.databinding.FragmentHrRequestsBinding
+import com.example.emotionsai.databinding.FragmentEmployeeRequestsBinding
 import com.example.emotionsai.di.ServiceLocator
 
-class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
+class EmployeeRequestsFragment : Fragment(R.layout.fragment_employee_requests) {
 
-    private var _vb: FragmentHrRequestsBinding? = null
+    private var _vb: FragmentEmployeeRequestsBinding? = null
     private val vb get() = _vb!!
 
-    private val vm: HrRequestsViewModel by viewModels {
-        ServiceLocator.hrRequestsVMFactory(requireContext())
+    private val vm: EmployeeRequestsViewModel by viewModels {
+        ServiceLocator.employeeRequestsVMFactory(requireContext())
     }
 
-    private lateinit var adapter: HrRequestsAdapter
+    private lateinit var adapter: EmployeeRequestsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _vb = FragmentHrRequestsBinding.bind(view)
+        _vb = FragmentEmployeeRequestsBinding.bind(view)
 
-        adapter = HrRequestsAdapter { item ->
-            val action = HrRequestsFragmentDirections
-                .actionHrRequestsFragmentToHrRequestDetailsFragment(item.id)
+        adapter = EmployeeRequestsAdapter { item ->
+            val action = EmployeeRequestsFragmentDirections
+                .actionEmployeeRequestsFragmentToRequestChatFragment(item.id)
             findNavController().navigate(action)
         }
 
@@ -35,6 +35,9 @@ class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
         vb.rvRequests.adapter = adapter
 
         vb.swipeRefresh.setOnRefreshListener { vm.load() }
+        vb.btnCreate.setOnClickListener {
+            findNavController().navigate(R.id.action_employeeRequestsFragment_to_createRequestFragment)
+        }
 
         vm.loading.observe(viewLifecycleOwner) {
             vb.progress.visibility = if (it) View.VISIBLE else View.GONE
@@ -47,7 +50,10 @@ class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
             if (!it.isNullOrBlank()) Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
 
-        vm.items.observe(viewLifecycleOwner) { adapter.submitList(it) }
+        vm.items.observe(viewLifecycleOwner) { list ->
+            adapter.submitList(list)
+            vb.tvEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+        }
     }
 
     override fun onResume() {

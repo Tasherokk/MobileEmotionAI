@@ -6,6 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
@@ -128,7 +129,108 @@ data class PhotoLoginResponse(
     val isApproved: Boolean
         get() = verdict.equals("YES", ignoreCase = true)
 }
+// ==================== Requests ====================
+typealias RequestStatus = String // "OPEN" | "IN_PROGRESS" | "CLOSED"
 
+data class RequestTypeDto(
+    val id: Int,
+    val name: String,
+    val description: String
+)
+
+data class HrShortDto(
+    val id: Int,
+    val username: String,
+    val name: String
+)
+
+// ---------- List items ----------
+
+// Employee: GET /api/employee/requests/
+data class EmployeeRequestItemDto(
+    val id: Int,
+    val type: Int,
+    val type_name: String,
+    val hr: Int,
+    val hr_username: String,
+    val hr_name: String,
+    val status: RequestStatus,
+    val created_at: String,
+    val closed_at: String?,
+    val messages_count: Int,
+    val last_message_at: String?
+)
+
+// HR: GET /api/hr/requests/
+data class HrRequestItemDto(
+    val id: Int,
+    val type: Int,
+    val type_name: String,
+    val employee: Int,
+    val employee_username: String,
+    val employee_name: String,
+    val status: RequestStatus,
+    val created_at: String,
+    val closed_at: String?,
+    val messages_count: Int,
+    val last_message_at: String?
+)
+
+// ---------- Details ----------
+
+data class RequestMessageDto(
+    val id: Int,
+    val sender: Int,
+    val sender_username: String,
+    val sender_name: String,
+    val text: String?,
+    val file: String?,
+    val created_at: String,
+    val is_mine: Boolean
+)
+
+// Employee details: GET /api/employee/requests/{id}/
+data class EmployeeRequestDetailsDto(
+    val id: Int,
+    val type: Int,
+    val type_name: String,
+    val type_description: String?,
+    val hr: Int,
+    val hr_username: String,
+    val hr_name: String,
+    val status: RequestStatus,
+    val created_at: String,
+    val closed_at: String?,
+    val messages: List<RequestMessageDto>
+)
+
+// HR details: GET /api/hr/requests/{id}/
+data class HrRequestDetailsDto(
+    val id: Int,
+    val type: Int,
+    val type_name: String,
+    val type_description: String?,
+    val employee: Int,
+    val employee_username: String,
+    val employee_name: String,
+    val employee_department: String?,
+    val status: RequestStatus,
+    val created_at: String,
+    val closed_at: String?,
+    val messages: List<RequestMessageDto>
+)
+
+// ---------- Bodies ----------
+
+data class CreateEmployeeRequestBody(
+    val type: Int,
+    val hr: Int,
+    val comment: String
+)
+
+data class UpdateRequestStatusBody(
+    val status: String // "IN_PROGRESS"
+)
 // ==================== API Interface ====================
 interface ApiService {
     // ============ Auth ============
@@ -195,4 +297,52 @@ interface ApiService {
     suspend fun photoLogin(
         @Part photo: MultipartBody.Part
     ): PhotoLoginResponse
+    // ---------- Employee requests ----------
+    @GET("api/employee/requests/")
+    suspend fun getMyEmployeeRequests(): List<EmployeeRequestItemDto>
+
+    @GET("api/employee/requests/types/")
+    suspend fun getEmployeeRequestTypes(): List<RequestTypeDto>
+
+    @GET("api/employee/requests/hr-list/")
+    suspend fun getEmployeeHrList(): List<HrShortDto>
+
+    @POST("api/employee/requests/")
+    suspend fun createEmployeeRequest(@Body body: CreateEmployeeRequestBody): EmployeeRequestDetailsDto
+
+    @GET("api/employee/requests/{id}/")
+    suspend fun getEmployeeRequestDetails(@Path("id") id: Int): EmployeeRequestDetailsDto
+
+    @Multipart
+    @POST("api/employee/requests/{id}/messages/")
+    suspend fun sendEmployeeRequestMessage(
+        @Path("id") id: Int,
+        @Part("text") text: RequestBody? = null,
+        @Part file: MultipartBody.Part? = null
+    ): EmployeeRequestDetailsDto
+
+
+    // ---------- HR requests ----------
+    @GET("api/hr/requests/")
+    suspend fun getHrRequests(): List<HrRequestItemDto>
+
+    @GET("api/hr/requests/{id}/")
+    suspend fun getHrRequestDetails(@Path("id") id: Int): HrRequestDetailsDto
+
+    @Multipart
+    @POST("api/hr/requests/{id}/messages/")
+    suspend fun sendHrRequestMessage(
+        @Path("id") id: Int,
+        @Part("text") text: RequestBody? = null,
+        @Part file: MultipartBody.Part? = null
+    ): HrRequestDetailsDto
+
+    @POST("api/hr/requests/{id}/close/")
+    suspend fun closeHrRequest(@Path("id") id: Int): HrRequestDetailsDto
+
+    @PATCH("api/hr/requests/{id}/status/")
+    suspend fun updateHrRequestStatus(
+        @Path("id") id: Int,
+        @Body body: UpdateRequestStatusBody
+    ): HrRequestDetailsDto
 }

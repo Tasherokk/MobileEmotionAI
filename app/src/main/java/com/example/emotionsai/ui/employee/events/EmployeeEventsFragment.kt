@@ -51,7 +51,6 @@ class EmployeeEventsFragment : Fragment(R.layout.fragment_employee_events) {
 
         vm.events.observe(viewLifecycleOwner) { list ->
             adapter.submit(list)
-            Toast.makeText(requireContext(), "Events: ${list.size}", Toast.LENGTH_SHORT).show()
 
         }
         val handle = findNavController().currentBackStackEntry?.savedStateHandle

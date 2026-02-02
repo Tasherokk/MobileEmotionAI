@@ -30,7 +30,7 @@ class HrProfileFragment : Fragment(R.layout.fragment_hr_profile) {
         vm.me.observe(viewLifecycleOwner) { me ->
             me ?: return@observe
 
-            vb.tvName.text = me.name.ifBlank { me.username }
+            vb.tvUsername.text = me.name.ifBlank { me.username }
             vb.tvRole.text = "👔 HR Manager"
 
             vb.tvCompanyName.text = me.company_name ?: "—"

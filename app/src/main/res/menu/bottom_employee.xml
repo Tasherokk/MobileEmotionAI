@@ -5,6 +5,11 @@
         android:title="Home"
         android:icon="@android:drawable/ic_menu_compass" />
     <item
+        android:id="@+id/employeeRequestsFragment"
+        android:icon="@drawable/ic_add"
+        android:title="Requests" />
+
+    <item
         android:id="@+id/employeeEventsFragment"
         android:title="Events"
         android:icon="@android:drawable/ic_search_category_default" />
