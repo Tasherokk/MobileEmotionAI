@@ -30,7 +30,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             Log.d("ProfileFragment", "Logout button clicked")
             showLogoutDialog()
         }
-
+        vb.swFaceLogin.setOnClickListener {
+            ServiceLocator.settingsStorage(requireContext()).setFaceIdEnabled(vb.swFaceLogin.isChecked)
+        }
         vm.loading.observe(viewLifecycleOwner) { loading ->
             vb.progress.visibility = if (loading) View.VISIBLE else View.GONE
             // Don't hide layoutContent completely, just show loading indicator
@@ -48,10 +50,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 vb.tvRole.text = when (role) {
                     UserRole.HR -> "HR Manager"
                     UserRole.EMPLOYEE -> "Employee"
-                }
-                vb.tvRoleEmoji.text = when (role) {
-                    UserRole.HR -> "👔"
-                    UserRole.EMPLOYEE -> "💼"
                 }
 
                 // Display company
@@ -92,8 +90,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 requireActivity().finish()
             }
         }
-        ServiceLocator.settingsStorage(requireContext()).setFaceIdEnabled(true)
-
+        ServiceLocator.settingsStorage(requireContext()).setFaceIdEnabled(false)
         vm.loadMe()
     }
 

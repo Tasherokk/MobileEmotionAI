@@ -3,16 +3,16 @@
 
     <item
         android:id="@+id/employeeRequestsFragment"
-        android:icon="@drawable/ic_add"
-        android:title="Requests" />
+        android:icon="@drawable/requests"
+        android:title="@string/requests" />
 
     <item
         android:id="@+id/employeeEventsFragment"
-        android:title="Events"
-        android:icon="@android:drawable/ic_search_category_default" />
+        android:title="@string/events"
+        android:icon="@drawable/events"/>
     <item
         android:id="@+id/profileFragment"
-        android:title="Profile"
-        android:icon="@android:drawable/ic_menu_preferences" />
+        android:title="@string/profile"
+        android:icon="@drawable/home"/>
 
 </menu>

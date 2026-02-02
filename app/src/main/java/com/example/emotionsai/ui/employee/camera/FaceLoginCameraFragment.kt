@@ -24,6 +24,7 @@ import com.example.emotionsai.di.ServiceLocator
 import com.example.emotionsai.ui.login.LoginActivity
 import com.example.emotionsai.util.PhotoVerifyResult
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
@@ -40,6 +41,23 @@ class FaceLoginCameraFragment : Fragment() {
     private lateinit var cameraExecutor: ExecutorService
 
     private var attemptsLeft = 3
+
+    // ✅ чтобы отменять запрос при повороте/уходе
+    private var verifyJob: Job? = null
+
+    // ✅ безопасный доступ к UI (binding может быть null после onDestroyView)
+    private inline fun safeUi(block: (FragmentCameraBinding) -> Unit) {
+        val b = _binding ?: return
+        if (!isAdded || view == null) return
+        block(b)
+    }
+
+    // ✅ безопасный контекст для диалогов/Toast
+    private inline fun safeContext(block: (android.content.Context) -> Unit) {
+        val ctx = context ?: return
+        if (!isAdded) return
+        block(ctx)
+    }
 
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -79,16 +97,18 @@ class FaceLoginCameraFragment : Fragment() {
         binding.btnCapture.setOnClickListener { takePhoto() }
 
         binding.btnClose.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Face ID")
-                .setMessage("Отменить Face ID проверку и перейти к логину?")
-                .setNegativeButton("Отмена", null)
-                .setPositiveButton("Перейти") { _, _ ->
-                    // Здесь токены НЕ чистим автоматически.
-                    // Пользователь сам отменил проверку.
-                    goLoginHard(clearTokens = false)
-                }
-                .show()
+            safeContext { ctx ->
+                MaterialAlertDialogBuilder(ctx)
+                    .setTitle("Face ID")
+                    .setMessage("Отменить Face ID проверку и перейти к логину?")
+                    .setNegativeButton("Отмена", null)
+                    .setPositiveButton("Перейти") { _, _ ->
+                        // Здесь токены НЕ чистим автоматически.
+                        // Пользователь сам отменил проверку.
+                        goLoginHard(clearTokens = false)
+                    }
+                    .show()
+            }
         }
     }
 
@@ -165,20 +185,31 @@ class FaceLoginCameraFragment : Fragment() {
             return
         }
 
-        binding.progressBar.visibility = View.VISIBLE
-        binding.btnCapture.isEnabled = false
+        safeUi {
+            it.progressBar.visibility = View.VISIBLE
+            it.btnCapture.isEnabled = false
+        }
 
         val faceRepo = ServiceLocator.faceAuthRepository(requireContext())
         val authRepo = ServiceLocator.authRepository(requireContext())
 
-        lifecycleScope.launch {
+        // ✅ отменяем предыдущую проверку
+        verifyJob?.cancel()
+
+        // ✅ ВАЖНО: привязано к viewLifecycleOwner, отменится при повороте
+        verifyJob = viewLifecycleOwner.lifecycleScope.launch {
             val result = faceRepo.verifyFace(stableFile)
 
             // можно удалить stableFile после отправки
             runCatching { stableFile.delete() }
 
-            binding.progressBar.visibility = View.GONE
-            binding.btnCapture.isEnabled = true
+            // ✅ если view уже уничтожена — выходим, не трогаем binding
+            if (_binding == null || !isAdded || view == null) return@launch
+
+            safeUi {
+                it.progressBar.visibility = View.GONE
+                it.btnCapture.isEnabled = true
+            }
 
             when (result) {
                 PhotoVerifyResult.Approved -> {
@@ -186,37 +217,36 @@ class FaceLoginCameraFragment : Fragment() {
                 }
 
                 is PhotoVerifyResult.Rejected -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.btnCapture.isEnabled = true
-
                     attemptsLeft--
 
                     if (attemptsLeft <= 0) {
-                        MaterialAlertDialogBuilder(requireContext())
-                            .setTitle("Face ID")
-                            .setMessage("Лимит попыток исчерпан. Войдите по логину и паролю.")
-                            .setCancelable(false)
-                            .setPositiveButton("OK") { _, _ ->
-                                ServiceLocator.authRepository(requireContext()).logout()
-                                goLoginHard(clearTokens = false)
-                            }
-                            .show()
+                        safeContext { ctx ->
+                            MaterialAlertDialogBuilder(ctx)
+                                .setTitle("Face ID")
+                                .setMessage("Лимит попыток исчерпан. Войдите по логину и паролю.")
+                                .setCancelable(false)
+                                .setPositiveButton("OK") { _, _ ->
+                                    ServiceLocator.authRepository(ctx).logout()
+                                    goLoginHard(clearTokens = false)
+                                }
+                                .show()
+                        }
                     } else {
-                        MaterialAlertDialogBuilder(requireContext())
-                            .setTitle("Face ID")
-                            .setMessage("Лицо не совпало.\nОсталось попыток: $attemptsLeft")
-                            .setPositiveButton("Повторить", null)
-                            .show()
+                        safeContext { ctx ->
+                            MaterialAlertDialogBuilder(ctx)
+                                .setTitle("Face ID")
+                                .setMessage("Лицо не совпало.\nОсталось попыток: $attemptsLeft")
+                                .setPositiveButton("Повторить", null)
+                                .show()
+                        }
                     }
                 }
 
                 is PhotoVerifyResult.Error -> {
                     val code = result.httpCode
-
                     when (code) {
-                        400 -> {
-                            // ❗️не auth-ошибка: обычно multipart field name / формат файла
-                            MaterialAlertDialogBuilder(requireContext())
+                        400 -> safeContext { ctx ->
+                            MaterialAlertDialogBuilder(ctx)
                                 .setTitle("Face ID")
                                 .setMessage("Сервер не принял фото (400). Проверь имя multipart-поля (photo/file) и попробуй снова.")
                                 .setPositiveButton("OK", null)
@@ -224,18 +254,21 @@ class FaceLoginCameraFragment : Fragment() {
                         }
 
                         403 -> {
-                            // ❗️auth реально умер
+                            // auth реально умер
                             authRepo.logout()
-                            Toast.makeText(requireContext(), "Session expired. Please login again.", Toast.LENGTH_LONG).show()
+                            if (isAdded) {
+                                Toast.makeText(requireContext(), "Session expired. Please login again.", Toast.LENGTH_LONG).show()
+                            }
                             goLoginHard(clearTokens = false)
                         }
 
-                        else -> {
-                            MaterialAlertDialogBuilder(requireContext())
+                        else -> safeContext { ctx ->
+                            MaterialAlertDialogBuilder(ctx)
                                 .setTitle("Face ID")
                                 .setMessage("Ошибка проверки лица. Код: ${code ?: "n/a"}. Попробуйте ещё раз.")
                                 .setPositiveButton("OK", null)
                                 .show()
+                            ServiceLocator.settingsStorage(ctx).setFaceIdEnabled(false)
                         }
                     }
                 }
@@ -259,9 +292,19 @@ class FaceLoginCameraFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        cameraExecutor.shutdown()
+
+        // ✅ отменяем сетевую проверку
+        verifyJob?.cancel()
+        verifyJob = null
+
+        // ✅ executor может быть не инициализирован, проверяем
+        if (::cameraExecutor.isInitialized) {
+            cameraExecutor.shutdown()
+        }
+
         _binding = null
     }
+
     private fun copyToStableDir(src: File): File {
         val dst = File(requireContext().filesDir, "face_login_${System.currentTimeMillis()}.jpg")
         src.inputStream().use { input ->
@@ -271,5 +314,4 @@ class FaceLoginCameraFragment : Fragment() {
         }
         return dst
     }
-
 }

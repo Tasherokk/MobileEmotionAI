@@ -1,18 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/hrAnalyticsFragment"
-        android:title="Dashboard"
-        android:icon="@android:drawable/ic_dialog_info" />
+        android:title="@string/dashboard"
+        android:icon="@drawable/dashboards"/>
     <item
         android:id="@+id/hrRequestsFragment"
-        android:title="Requests"
-        android:icon="@android:drawable/ic_menu_agenda" />
+        android:title="@string/requests"
+        android:icon="@drawable/requests"/>
     <item
         android:id="@+id/hrEventsFragment"
-        android:title="Events"
-        android:icon="@android:drawable/ic_menu_preferences" />
+        android:title="@string/events"
+        android:icon="@drawable/events"/>
     <item
         android:id="@+id/hrProfileFragment"
-        android:title="Profile"
-        android:icon="@android:drawable/ic_menu_preferences" />
+        android:title="@string/profile"
+        android:icon="@drawable/home" />
 </menu>
