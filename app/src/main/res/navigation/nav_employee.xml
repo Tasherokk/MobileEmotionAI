@@ -4,11 +4,6 @@
     app:startDestination="@id/authGateFragment">
 
     <fragment
-        android:id="@+id/employeeHomeFragment"
-        android:name="com.example.emotionsai.ui.employee.EmployeeHomeFragment"
-        android:label="Home">
-    </fragment>
-    <fragment
         android:id="@+id/createRequestFragment"
         android:name="com.example.emotionsai.ui.employee.requests.CreateRequestFragment"
         android:label="Create Request">
@@ -67,8 +62,8 @@
         android:label="Face Login">
         <action
             android:id="@+id/action_faceLogin_to_home"
-            app:destination="@id/employeeHomeFragment"
-            app:popUpTo="@id/employeeHomeFragment"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="true"/>
     </fragment>
     <fragment
@@ -80,8 +75,8 @@
             app:destination="@id/faceLoginCameraFragment" />
         <action
             android:id="@+id/action_authGate_to_home"
-            app:destination="@id/employeeHomeFragment"
-            app:popUpTo="@id/employeeHomeFragment"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="true"/>
     </fragment>
     <fragment

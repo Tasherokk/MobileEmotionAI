@@ -100,16 +100,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-            <!-- Details Section -->
-            <Button
-                android:id="@+id/btnMyEvents"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="All Events"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                style="@style/Widget.Material3.FloatingActionButton.Primary"
-                android:backgroundTint="@color/design_default_color_on_primary"/>
 
             <TextView
                 android:layout_width="wrap_content"

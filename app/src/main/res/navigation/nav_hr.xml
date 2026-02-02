@@ -10,7 +10,7 @@
     <fragment
         android:id="@+id/createEventFragment"
         android:name="com.example.emotionsai.ui.hr.events.CreateEventFragment"
-        android:label="Dashboard">
+        android:label="Create Event">
     <argument
         android:name="eventId"
         app:argType="integer"
@@ -35,17 +35,14 @@
         android:id="@+id/hrProfileFragment"
         android:name="com.example.emotionsai.ui.hr.profile.HrProfileFragment"
         android:label="HR Profile">
-        <action
-            android:id="@+id/action_hrProfile_to_myEvents"
-            app:destination="@id/myEventsFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/myEventsFragment"
+        android:id="@+id/hrEventsFragment"
         android:name="com.example.emotionsai.ui.hr.events.HrEventsFragment"
         android:label="Events" >
         <action
-            android:id="@+id/action_myEventsFragment_to_createEventFragment"
+            android:id="@+id/action_hrEventsFragment_to_createEventFragment"
             app:destination="@id/createEventFragment" />
     </fragment>
 
@@ -71,8 +68,8 @@
         android:label="Face Login">
         <action
             android:id="@+id/action_faceLogin_to_home"
-            app:destination="@id/hrAnalyticsFragment"
-            app:popUpTo="@id/hrAnalyticsFragment"
+            app:destination="@id/hrProfileFragment"
+            app:popUpTo="@id/hrProfileFragment"
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_faceLoginCameraFragment_to_hrAnalyticsFragment"
@@ -87,8 +84,8 @@
             app:destination="@id/faceLoginCameraFragment" />
         <action
             android:id="@+id/action_authGate_to_home"
-            app:destination="@id/hrAnalyticsFragment"
-            app:popUpTo="@id/hrAnalyticsFragment"
+            app:destination="@id/hrProfileFragment"
+            app:popUpTo="@id/hrProfileFragment"
             app:popUpToInclusive="true"/>
     </fragment>
 

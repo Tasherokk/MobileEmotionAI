@@ -25,7 +25,7 @@ class FeedbackRepository(
             
             val eventIdBody = eventId?.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
             
-            val response = api.submitFeedback(body)
+            val response = api.submitFeedback(body, eventIdBody)
             Result.Ok(response)
         } catch (e: Exception) {
             Result.Err("Unable to analyze emotion: ${e.message}")

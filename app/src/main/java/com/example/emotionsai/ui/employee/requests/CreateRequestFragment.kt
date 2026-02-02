@@ -30,12 +30,16 @@ class CreateRequestFragment : Fragment(R.layout.fragment_create_request) {
         vm.types.observe(viewLifecycleOwner) { list ->
             vb.dropType.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list.map { it.name }))
             vb.dropType.setOnItemClickListener { _, _, pos, _ -> selectedTypeId = list[pos].id }
+            vb.dropType.setOnClickListener { vb.dropType.showDropDown() }
+            toast("hrs: ${list.size}")
         }
 
         // hr list
         vm.hrs.observe(viewLifecycleOwner) { list ->
             vb.dropHr.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list.map { it.name }))
             vb.dropHr.setOnItemClickListener { _, _, pos, _ -> selectedHrId = list[pos].id }
+            vb.dropHr.setOnClickListener { vb.dropHr.showDropDown() }
+            toast("hrs: ${list.size}")
         }
 
         vm.loading.observe(viewLifecycleOwner) {

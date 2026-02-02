@@ -21,10 +21,6 @@ class HrProfileFragment : Fragment(R.layout.fragment_hr_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _vb = FragmentHrProfileBinding.bind(view)
 
-        vb.btnMyEvents.setOnClickListener {
-            findNavController().navigate(R.id.action_hrProfile_to_myEvents)
-        }
-
         vb.btnLogout.setOnClickListener { showLogoutDialog() }
 
         vm.me.observe(viewLifecycleOwner) { me ->

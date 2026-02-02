@@ -19,6 +19,8 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+
 class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
 
     private var _vb: FragmentCreateEventBinding? = null
@@ -40,6 +42,7 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
         _vb = FragmentCreateEventBinding.bind(view)
 
         adapter = EmployeeMultiAdapter { _, _ -> }
+        vb.rvEmployees.layoutManager = LinearLayoutManager(requireContext())
         vb.rvEmployees.adapter = adapter
 
         setupProfile()
