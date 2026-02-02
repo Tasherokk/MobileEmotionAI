@@ -10,7 +10,7 @@
         <action
             android:id="@+id/action_createRequestFragment_to_employeeRequestDetailsFragment"
             app:destination="@id/employeeRequestDetailsFragment"
-            app:popUpTo="@id/employeeRequestDetailsFragment"/>
+            app:popUpTo="@id/employeeRequestsFragment"/>
     </fragment>
     <fragment
         android:id="@+id/employeeRequestDetailsFragment"

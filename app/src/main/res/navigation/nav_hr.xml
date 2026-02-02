@@ -71,9 +71,6 @@
             app:destination="@id/hrProfileFragment"
             app:popUpTo="@id/hrProfileFragment"
             app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_faceLoginCameraFragment_to_hrAnalyticsFragment"
-            app:destination="@id/hrAnalyticsFragment" />
     </fragment>
     <fragment
         android:id="@+id/authGateFragment"

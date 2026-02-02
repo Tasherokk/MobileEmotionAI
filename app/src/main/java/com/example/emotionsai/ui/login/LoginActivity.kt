@@ -25,19 +25,6 @@ class LoginActivity : AppCompatActivity() {
             )
         }
 
-        vb.btnRegister.setOnClickListener {
-            // для примера: name можно взять из username (или добавь отдельное поле)
-            val u = vb.etUsername.text?.toString().orEmpty()
-            val p = vb.etPassword.text?.toString().orEmpty()
-            vm.register(u, name = u, password = p)
-        }
-
-        vm.loading.observe(this) { loading ->
-            vb.progress.visibility = if (loading) View.VISIBLE else View.GONE
-            vb.btnLogin.isEnabled = !loading
-            vb.btnRegister.isEnabled = !loading
-        }
-
         vm.error.observe(this) { err ->
             vb.tvError.text = err
         }

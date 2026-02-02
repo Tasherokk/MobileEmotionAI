@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.emotionsai.R
 import com.example.emotionsai.databinding.FragmentHrProfileBinding
+import com.example.emotionsai.di.ServiceLocator
 import com.example.emotionsai.ui.login.LoginActivity
 
 class HrProfileFragment : Fragment(R.layout.fragment_hr_profile) {
@@ -22,12 +23,15 @@ class HrProfileFragment : Fragment(R.layout.fragment_hr_profile) {
         _vb = FragmentHrProfileBinding.bind(view)
 
         vb.btnLogout.setOnClickListener { showLogoutDialog() }
-
+        vb.swFaceLogin.setOnClickListener {
+            ServiceLocator.settingsStorage(requireContext()).setFaceIdEnabled(vb.swFaceLogin.isChecked)
+        }
         vm.me.observe(viewLifecycleOwner) { me ->
             me ?: return@observe
 
             vb.tvUsername.text = me.name.ifBlank { me.username }
-            vb.tvRole.text = "👔 HR Manager"
+            vb.tvHello.text = me.name.ifBlank { me.username }
+            vb.tvRole.text = "HR Manager"
 
             vb.tvCompanyName.text = me.company_name ?: "—"
             vb.tvDepartmentName.text = me.department_name ?: "—"
