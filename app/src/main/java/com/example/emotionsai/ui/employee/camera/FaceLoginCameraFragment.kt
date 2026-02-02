@@ -69,7 +69,6 @@ class FaceLoginCameraFragment : Fragment() {
 
     private fun setupUiForFaceLogin() {
         // FaceLogin: event не нужен
-        binding.btnSelectEvent.visibility = View.GONE
         binding.tvSelectedEvent.visibility = View.GONE
 
         binding.progressBar.visibility = View.GONE

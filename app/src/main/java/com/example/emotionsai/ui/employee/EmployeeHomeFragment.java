@@ -26,13 +26,7 @@ public class EmployeeHomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         
-        binding.btnTakePhoto.setOnClickListener(v -> 
-            Navigation.findNavController(v).navigate(R.id.action_employeeHome_to_camera)
-        );
-        
-        binding.btnViewHistory.setOnClickListener(v ->
-            Navigation.findNavController(v).navigate(R.id.action_employeeHome_to_stats)
-        );
+
     }
 
     @Override

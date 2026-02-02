@@ -1,9 +1,9 @@
 package com.example.emotionsai.data.repo
 
 import com.example.emotionsai.data.remote.ApiService
+import com.example.emotionsai.data.remote.Feedback
 import com.example.emotionsai.data.remote.FeedbackResponse
-import com.example.emotionsai.data.remote.MyFeedbackResponse
-import com.example.emotionsai.data.remote.MyStatsResponse
+import com.example.emotionsai.data.remote.HrEventDto
 import com.example.emotionsai.util.Result
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -17,41 +17,54 @@ class FeedbackRepository(
     /**
      * Отправить фото для анализа эмоций
      */
+
     suspend fun submitFeedback(photoFile: File, eventId: Int? = null): Result<FeedbackResponse> {
         return try {
             val requestFile = photoFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("file", photoFile.name, requestFile)
             
-            val eventIdBody = eventId?.let { 
-                it.toString().toRequestBody("text/plain".toMediaTypeOrNull()) 
-            }
+            val eventIdBody = eventId?.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
             
-            val response = api.submitFeedback(body, eventIdBody)
+            val response = api.submitFeedback(body)
             Result.Ok(response)
         } catch (e: Exception) {
-            Result.Err("Не удалось проанализировать фото. Попробуйте еще раз")
+            Result.Err("Unable to analyze emotion: ${e.message}")
+        }
+    }
+    suspend fun loadFeedbacks(
+        start: String,
+        end: String,
+        departments: List<Int>? = null,
+        emotions: List<String>? = null,
+        eventId: Int? = null,
+        hasEvent: Boolean? = null
+    ): Result<List<Feedback>> {
+        return try {
+
+            val depStr = departments?.joinToString(",")
+            val emoStr = emotions?.joinToString(",")
+
+            val data = api.getHrFilteredFeedbacks(
+                startDate = start,
+                endDate = end,
+                departments = depStr,
+                emotions = emoStr,
+                eventId = eventId,
+                hasEvent = hasEvent
+            )
+
+            Result.Ok(data)
+
+        } catch (e: Exception) {
+            Result.Err(e.message ?: "Failed to load analytics feedbacks")
+        }
+    }
+    suspend fun loadHrEvents(): Result<List<HrEventDto>> {
+        return try {
+            Result.Ok(api.getHrEvents())
+        } catch (e: Exception) {
+            Result.Err(e.message ?: "Failed to load HR events")
         }
     }
 
-    /**
-     * Получить историю моих feedback'ов
-     */
-    suspend fun getMyFeedback(limit: Int = 50, offset: Int = 0): Result<MyFeedbackResponse> {
-        return try {
-            Result.Ok(api.getMyFeedback(limit, offset))
-        } catch (e: Exception) {
-            Result.Err(e.message ?: "Failed to load feedback history")
-        }
-    }
-
-    /**
-     * Получить мою статистику
-     */
-    suspend fun getMyStats(from: String? = null, to: String? = null): Result<MyStatsResponse> {
-        return try {
-            Result.Ok(api.getMyStats(from, to))
-        } catch (e: Exception) {
-            Result.Err(e.message ?: "Failed to load statistics")
-        }
-    }
 }

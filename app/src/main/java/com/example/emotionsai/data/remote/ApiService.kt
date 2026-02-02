@@ -65,103 +65,62 @@ data class Department(
     val company_name: String
 )
 
-data class Event(
+data class HrEventDto(
     val id: Int, 
     val title: String, 
     val starts_at: String, 
     val ends_at: String?, 
     val company: Int, 
-    val company_name: String
+    val company_name: String,
+    val participants_count: Int
+)
+
+data class EmployeeEventDto(
+    val id: Int,
+    val title: String,
+    val starts_at: String,
+    val ends_at: String?,
+    val company: Int,
+    val company_name: String,
+    val participants_count: Int,
+    val has_feedback: Boolean
 )
 
 data class EventCreateRequest(
     val title: String,
     val starts_at: String,
     val ends_at: String?,
-    val company: Int
+    val company: Int? = null,
+    val participants: List<Int>? = null   // ← безопасно, nullable
 )
 
-// ==================== Feedback Models ====================
-data class EmotionProb(val emotion: String, val prob: Float)
-
-data class FaceBox(val x: Int, val y: Int, val w: Int, val h: Int)
-
-data class FeedbackResponse(
-    val id: Long,
-    val emotion: String,
-    val confidence: Float,
-    val top3: List<EmotionProb>,
-    val face_box: FaceBox?,
-    val probs: Map<String, Float>
-)
-
-data class Feedback(
-    val id: Long,
-    val created_at: String,
-    val emotion: String,
-    val confidence: Float,
-    val top3: List<EmotionProb>?,
-    val face_box: FaceBox?,
-    val probs: Map<String, Float>,
-    val event: Int?,
-    val event_title: String?,
-    val company: Int?,
+data class EmployeeDto(
+    val id: Int,
+    val username: String,
+    val name: String,
+    val company: Int,
     val company_name: String?,
     val department: Int?,
     val department_name: String?
 )
 
-data class MyFeedbackResponse(
-    val results: List<Feedback>,
-    val total: Int,
-    val limit: Int,
-    val offset: Int
+
+// ==================== Feedback Models ====================
+data class FeedbackResponse(
+    val id: Long,
+    val emotion: String,
 )
-
-data class EmotionCount(val emotion: String, val count: Int, val percent: Float)
-
-data class MyStatsResponse(
-    val total: Int,
-    val avg_confidence: Float,
-    val top_emotion: String?,
-    val emotions: List<EmotionCount>,
-    val filters: Map<String, String?>
-)
-
-// ==================== HR Analytics Models ====================
-data class HrOverviewResponse(
-    val total: Int,
-    val avg_confidence: Float,
-    val top_emotion: String?,
-    val emotions: List<EmotionCount>,
-    val filters: Map<String, String?>
-)
-
-data class TimelinePoint(
-    val bucket: String,
-    val emotions: Map<String, Int>
-)
-
-data class HrTimelineResponse(
-    val group_by: String,
-    val series: List<TimelinePoint>,
-    val filters: Map<String, String?>
-)
-
-data class UserStats(
+data class Feedback(
+    val id: Long,
     val user_id: Long,
-    val name: String,
-    val username: String,
-    val total: Int,
-    val avg_confidence: Float,
-    val top_emotion: String?
+    val user_username: String,
+    val emotion: String,
+    val created_at: String,
+    val department: Int?,
+    val department_name: String?,
+    val event: Int?
 )
 
-data class HrByUserResponse(
-    val users: List<UserStats>,
-    val filters: Map<String, String?>
-)
-// ==================== Face Auth Models ====================
 data class PhotoLoginResponse(
     val verdict: String? = null,   // "YES" | "NO"
     val detail: String? = null
@@ -192,76 +151,48 @@ interface ApiService {
     @GET("api/feedback/departments")
     suspend fun getDepartments(@Query("company_id") companyId: Int? = null): List<Department>
     
-    @GET("api/feedback/events")
-    suspend fun getEvents(
-        @Query("active") active: Boolean? = null,
-        @Query("company_id") companyId: Int? = null
-    ): List<Event>
-    
     // ============ Employee Feedback ============
     @Multipart
-    @POST("api/feedback/photo")
+    @POST("api/employee/feedback")
     suspend fun submitFeedback(
         @Part file: MultipartBody.Part,
         @Part("event_id") eventId: RequestBody? = null
     ): FeedbackResponse
-    
-    @GET("api/feedback/my")
-    suspend fun getMyFeedback(
-        @Query("limit") limit: Int = 50,
-        @Query("offset") offset: Int = 0
-    ): MyFeedbackResponse
-    
-    @GET("api/feedback/my/stats")
-    suspend fun getMyStats(
-        @Query("from") from: String? = null,
-        @Query("to") to: String? = null
-    ): MyStatsResponse
-    
+    @GET("api/employee/events/my")
+    suspend fun getMyEmployeeEvents(): List<EmployeeEventDto>
     // ============ HR Analytics ============
-    @GET("api/feedback/hr/stats/overview")
-    suspend fun getHrOverview(
-        @Query("from") from: String? = null,
-        @Query("to") to: String? = null,
+    @GET("api/hr/analytics/feedbacks/")
+    suspend fun getHrFilteredFeedbacks(
+        @Query("start_date") startDate: String,
+        @Query("end_date") endDate: String,
+        @Query("departments") departments: String? = null,
+        @Query("emotions") emotions: String? = null,
         @Query("event_id") eventId: Int? = null,
-        @Query("department") department: String? = null
-    ): HrOverviewResponse
-    
-    @GET("api/feedback/hr/stats/timeline")
-    suspend fun getHrTimeline(
-        @Query("from") from: String? = null,
-        @Query("to") to: String? = null,
-        @Query("group_by") groupBy: String = "day",
-        @Query("event_id") eventId: Int? = null,
-        @Query("department") department: String? = null
-    ): HrTimelineResponse
-    
-    @GET("api/feedback/hr/stats/by_user")
-    suspend fun getHrByUser(
-        @Query("from") from: String? = null,
-        @Query("to") to: String? = null,
-        @Query("limit") limit: Int = 20,
-        @Query("event_id") eventId: Int? = null,
-        @Query("department") department: String? = null
-    ): HrByUserResponse
-    
-    // ============ HR Event Management ============
-    @POST("api/feedback/hr/events")
-    suspend fun createEvent(@Body req: EventCreateRequest): Event
-    
-    @GET("api/feedback/hr/events/{id}")
-    suspend fun getEvent(@Path("id") id: Int): Event
-    
-    @PUT("api/feedback/hr/events/{id}")
-    suspend fun updateEvent(@Path("id") id: Int, @Body req: EventCreateRequest): Event
-    
-    @DELETE("api/feedback/hr/events/{id}")
-    suspend fun deleteEvent(@Path("id") id: Int)
+        @Query("has_event") hasEvent: Boolean? = null
+    ): List<Feedback>
+    // ============ HR Event Management ===========
+    @GET("api/hr/events/")
+    suspend fun getHrEvents(): List<HrEventDto>
+
+    @POST("api/hr/events/")
+    suspend fun createHrEvent(@Body req: EventCreateRequest): HrEventDto
+
+    @PUT("api/hr/events/{id}/")
+    suspend fun updateHrEvent(
+        @Path("id") id: Int,
+        @Body req: EventCreateRequest
+    ): HrEventDto
+
+    @DELETE("api/hr/events/{id}/")
+    suspend fun deleteHrEvent(@Path("id") id: Int)
+
+    @GET("api/hr/company/employees")
+    suspend fun getCompanyEmployees(): List<EmployeeDto>
+
     // ============ Face ID Auth ============
     @Multipart
     @POST("api/auth/photo-login")
     suspend fun photoLogin(
         @Part photo: MultipartBody.Part
     ): PhotoLoginResponse
-
 }

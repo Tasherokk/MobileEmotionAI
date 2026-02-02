@@ -16,6 +16,14 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "https://jitpack.io"
+            // This ensures Gradle doesn't try to send credentials to JitPack
+            metadataSources {
+                mavenPom()
+                artifact()
+            }
+        }
     }
 }
 

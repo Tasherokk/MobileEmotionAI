@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.emotionsai.data.remote.Event
+import com.example.emotionsai.data.remote.EmployeeEventDto
 import com.example.emotionsai.data.remote.FeedbackResponse
+import com.example.emotionsai.data.repo.EventRepository
 import com.example.emotionsai.data.repo.FeedbackRepository
 import com.example.emotionsai.data.repo.ReferenceRepository
 import com.example.emotionsai.util.Result
@@ -21,17 +22,15 @@ sealed class CameraUiState {
 
 class CameraViewModel(
     private val feedbackRepo: FeedbackRepository,
-    private val referenceRepo: ReferenceRepository
+    private val eventRepo: EventRepository
 ) : ViewModel() {
 
     private val _uiState = MutableLiveData<CameraUiState>(CameraUiState.Idle)
     val uiState: LiveData<CameraUiState> = _uiState
 
-    private val _events = MutableLiveData<List<Event>>(emptyList())
-    val events: LiveData<List<Event>> = _events
+    private val _events = MutableLiveData<List<EmployeeEventDto>>(emptyList())
+    val events: LiveData<List<EmployeeEventDto>> = _events
 
-    private val _selectedEvent = MutableLiveData<Event?>(null)
-    val selectedEvent: LiveData<Event?> = _selectedEvent
 
     init {
         loadActiveEvents()
@@ -39,7 +38,7 @@ class CameraViewModel(
 
     private fun loadActiveEvents() {
         viewModelScope.launch {
-            when (val result = referenceRepo.getEvents(active = true)) {
+            when (val result = eventRepo.loadMyEvents()) {
                 is Result.Ok -> _events.value = result.value
                 is Result.Err -> {
                     // Не критично, можно продолжать без событий
@@ -48,15 +47,12 @@ class CameraViewModel(
         }
     }
 
-    fun selectEvent(event: Event?) {
-        _selectedEvent.value = event
-    }
 
-    fun submitPhoto(photoFile: File) {
+    fun submitPhoto(photoFile: File, eventId: Int?) {
         _uiState.value = CameraUiState.Loading
 
         viewModelScope.launch {
-            when (val result = feedbackRepo.submitFeedback(photoFile, _selectedEvent.value?.id)) {
+            when (val result = feedbackRepo.submitFeedback(photoFile, eventId)) {
                 is Result.Ok -> {
                     _uiState.value = CameraUiState.Success(result.value)
                 }

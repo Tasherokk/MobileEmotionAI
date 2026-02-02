@@ -92,7 +92,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 requireActivity().finish()
             }
         }
-        ServiceLocator.settingsStorage(requireContext()).setFaceIdEnabled(true)
+        ServiceLocator.settingsStorage(requireContext()).setFaceIdEnabled(false)
 
         vm.loadMe()
     }

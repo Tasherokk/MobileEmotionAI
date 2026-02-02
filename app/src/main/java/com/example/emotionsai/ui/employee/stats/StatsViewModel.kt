@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.emotionsai.data.remote.Feedback
-import com.example.emotionsai.data.remote.MyStatsResponse
+import com.example.emotionsai.data.remote.FeedbackResponse
 import com.example.emotionsai.data.repo.FeedbackRepository
 import com.example.emotionsai.util.Result
 import kotlinx.coroutines.launch
@@ -15,7 +14,7 @@ import java.util.Locale
 
 sealed class StatsUiState {
     object Loading : StatsUiState()
-    data class Success(val stats: MyStatsResponse, val history: List<Feedback>) : StatsUiState()
+    data class Success(val stats: FeedbackResponse) : StatsUiState()
     data class Error(val message: String) : StatsUiState()
 }
 
@@ -46,27 +45,25 @@ class StatsViewModel(
         _uiState.value = StatsUiState.Loading
 
         viewModelScope.launch {
-            val period = _selectedPeriod.value ?: Period.WEEK
-            val (from, to) = getPeriodDates(period)
-
-            // Load stats and history in parallel
-            val statsResult = feedbackRepo.getMyStats(from, to)
-            val historyResult = feedbackRepo.getMyFeedback(limit = 50, offset = 0)
-
-            when {
-                statsResult is Result.Ok && historyResult is Result.Ok -> {
-                    _uiState.value = StatsUiState.Success(
-                        stats = statsResult.value,
-                        history = historyResult.value.results
-                    )
-                }
-                statsResult is Result.Err -> {
-                    _uiState.value = StatsUiState.Error(statsResult.message)
-                }
-                historyResult is Result.Err -> {
-                    _uiState.value = StatsUiState.Error(historyResult.message)
-                }
-            }
+//            val period = _selectedPeriod.value ?: Period.WEEK
+////            val (from, to) = getPeriodDates(period)
+//
+//            // Load stats and history in parallel
+//
+//            when {
+//                statsResult is Result.Ok && historyResult is Result.Ok -> {
+//                    _uiState.value = StatsUiState.Success(
+//                        stats = statsResult.value,
+//                        history = historyResult.value.results
+//                    )
+//                }
+//                statsResult is Result.Err -> {
+//                    _uiState.value = StatsUiState.Error(statsResult.message)
+//                }
+//                historyResult is Result.Err -> {
+//                    _uiState.value = StatsUiState.Error(historyResult.message)
+//                }
+//            }
         }
     }
 

@@ -11,13 +11,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.emotionsai.databinding.FragmentStatsBinding
 import com.example.emotionsai.di.ServiceLocator
 import com.google.android.material.chip.Chip
+import androidx.core.graphics.toColorInt
 
 class StatsFragment : Fragment() {
-
+    private val emotionColors = mapOf(
+        "happy" to "#4CAF50".toColorInt(),
+        "sad" to "#2196F3".toColorInt(),
+        "angry" to "#F44336".toColorInt(),
+        "surprised" to "#FFEB3B".toColorInt(),
+        "neutral" to "#9E9E9E".toColorInt(),
+        "fear" to "#3F51B5".toColorInt(),
+        "disgust" to "#8BC34A".toColorInt()
+    )
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: StatsViewModel
-    private lateinit var adapter: FeedbackHistoryAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentStatsBinding.inflate(inflater, container, false)
@@ -37,9 +45,7 @@ class StatsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = FeedbackHistoryAdapter()
         binding.rvHistory.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvHistory.adapter = adapter
     }
 
     private fun setupPeriodSelector() {
@@ -78,10 +84,9 @@ class StatsFragment : Fragment() {
                     binding.layoutError.visibility = View.GONE
                     
                     displayStats(state.stats)
-                    adapter.submitList(state.history)
-                    
-                    binding.tvHistoryEmpty.visibility = 
-                        if (state.history.isEmpty()) View.VISIBLE else View.GONE
+//
+//                    binding.tvHistoryEmpty.visibility =
+//                        if (state.history.isEmpty()) View.VISIBLE else View.GONE
                 }
                 is StatsUiState.Error -> {
                     binding.progressBar.visibility = View.GONE
@@ -93,43 +98,29 @@ class StatsFragment : Fragment() {
         }
     }
 
-    private fun displayStats(stats: com.example.emotionsai.data.remote.MyStatsResponse) {
+    private fun displayStats(stats: com.example.emotionsai.data.remote.FeedbackResponse) {
         // Total submissions
-        binding.tvTotalCount.text = stats.total.toString()
 
         // Average confidence
-        binding.tvAvgConfidence.text = "${(stats.avg_confidence * 100).toInt()}%"
-        binding.progressAvgConfidence.progress = (stats.avg_confidence * 100).toInt()
 
         // Top emotion
-        val emoji = getEmotionEmoji(stats.top_emotion ?: "neutral")
+        val emoji = getEmotionEmoji(stats.emotion)
         binding.tvTopEmotionEmoji.text = emoji
-        binding.tvTopEmotionName.text = stats.top_emotion?.uppercase() ?: "N/A"
+        binding.tvTopEmotionName.text = stats.emotion.uppercase()
 
+        binding.layoutEmotions.removeAllViews()
         // Emotion distribution
-        if (stats.emotions.isNotEmpty()) {
-            val colors = listOf(
-                Color.parseColor("#4CAF50"), // Green
-                Color.parseColor("#2196F3"), // Blue
-                Color.parseColor("#FF9800"), // Orange
-                Color.parseColor("#F44336"), // Red
-                Color.parseColor("#9C27B0")  // Purple
+        val chip = Chip(requireContext()).apply {
+            chipBackgroundColor = android.content.res.ColorStateList.valueOf(
+                emotionColors[stats.emotion]?.toInt() ?: Color.GRAY
             )
-
-            binding.layoutEmotions.removeAllViews()
-            stats.emotions.take(5).forEachIndexed { index, emotionCount ->
-                val chip = Chip(requireContext()).apply {
-                    text = "${emotionCount.emotion} ${emotionCount.percent.toInt()}%"
-                    chipBackgroundColor = android.content.res.ColorStateList.valueOf(
-                        colors[index % colors.size]
-                    )
-                    setTextColor(Color.WHITE)
-                    isClickable = false
-                    isCheckable = false
-                }
-                binding.layoutEmotions.addView(chip)
-            }
+            setTextColor(Color.WHITE)
+            isClickable = false
+            isCheckable = false
         }
+        binding.layoutEmotions.addView(chip)
+
+
     }
 
     private fun getEmotionEmoji(emotion: String): String {

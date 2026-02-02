@@ -5,7 +5,12 @@
         android:title="Home"
         android:icon="@android:drawable/ic_menu_compass" />
     <item
+        android:id="@+id/employeeEventsFragment"
+        android:title="Events"
+        android:icon="@android:drawable/ic_search_category_default" />
+    <item
         android:id="@+id/profileFragment"
         android:title="Profile"
         android:icon="@android:drawable/ic_menu_preferences" />
+
 </menu>
