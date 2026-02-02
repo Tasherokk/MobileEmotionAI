@@ -29,33 +29,14 @@ class ResultFragment : Fragment() {
 
     private fun displayResult() {
         val emotion = args.emotion
-        val confidence = args.confidence
-        val top3 = args.top3
 
         // Display main emotion with emoji
         val emoji = getEmotionEmoji(emotion)
         binding.tvEmotionEmoji.text = emoji
         binding.tvEmotionName.text = emotion.uppercase()
 
-        // Display confidence
-        binding.tvConfidence.text = "${(confidence * 100).toInt()}%"
-        binding.progressConfidence.progress = (confidence * 100).toInt()
-
-        // Display top 3 emotions
-        val top3List = top3.map { 
-            val parts = it.split(":")
-            Pair(parts[0], parts[1].toFloatOrNull() ?: 0f)
-        }
-
-        if (top3List.size >= 2) {
-            binding.tvEmotion2.text = "• ${top3List[1].first} ${(top3List[1].second * 100).toInt()}%"
-        }
-        if (top3List.size >= 3) {
-            binding.tvEmotion3.text = "• ${top3List[2].first} ${(top3List[2].second * 100).toInt()}%"
-        }
-
         // Display motivational message
-        binding.tvMessage.text = getMotivationalMessage(emotion, confidence)
+        binding.tvMessage.text = getMotivationalMessage(emotion)
     }
 
     private fun getEmotionEmoji(emotion: String): String {
@@ -71,7 +52,7 @@ class ResultFragment : Fragment() {
         }
     }
 
-    private fun getMotivationalMessage(emotion: String, confidence: Float): String {
+    private fun getMotivationalMessage(emotion: String): String {
         return when (emotion.lowercase()) {
             "happy" -> "Great mood! Keep up the positive vibes! 🌟"
             "sad" -> "Everyone has tough days. Remember, tomorrow is a new opportunity! 💪"
@@ -86,12 +67,9 @@ class ResultFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnDone.setOnClickListener {
-            findNavController().navigate(ResultFragmentDirections.actionResultToEmployeeHome())
+            findNavController().navigate(ResultFragmentDirections.actionResultFragmentToEmployeeEventsFragment())
         }
 
-        binding.btnViewStats.setOnClickListener {
-            findNavController().navigate(ResultFragmentDirections.actionResultToStats())
-        }
     }
 
     override fun onDestroyView() {

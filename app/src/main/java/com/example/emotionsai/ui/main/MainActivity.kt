@@ -59,12 +59,9 @@ class MainActivity : AppCompatActivity() {
         // ✅ 6) скрываем bottom nav для CameraFragment
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.cameraFragment -> {
-                    vb.bottomNav.visibility = View.GONE
-                }
-                else -> {
-                    vb.bottomNav.visibility = View.VISIBLE
-                }
+                R.id.cameraFragment,
+                R.id.faceLoginCameraFragment -> vb.bottomNav.visibility = View.GONE
+                else -> vb.bottomNav.visibility = View.VISIBLE
             }
         }
     }

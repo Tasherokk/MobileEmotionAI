@@ -39,7 +39,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_close_clear_cancel"
                 android:contentDescription="Close"
-                android:tint="@android:color/white" />
+                app:tint="@android:color/white" />
 
             <TextView
                 android:layout_width="0dp"
@@ -85,17 +85,6 @@
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:layout_marginBottom="16dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSelectEvent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📌 Link to Event"
-            android:textColor="@android:color/white"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            app:strokeColor="@android:color/white"
-            android:layout_marginBottom="16dp"
-            android:visibility="gone" />
 
         <!-- Capture Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton

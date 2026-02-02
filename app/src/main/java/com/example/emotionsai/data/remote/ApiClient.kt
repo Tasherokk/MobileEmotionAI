@@ -14,7 +14,7 @@ class ApiClient(
 
     private fun logging(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.HEADERS // Только заголовки, без тела
+            level = HttpLoggingInterceptor.Level.BODY // Только заголовки, без тела
         }
     }
 

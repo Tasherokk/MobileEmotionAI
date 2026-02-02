@@ -1,15 +1,92 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_hr"
-    app:startDestination="@id/hrDashboardFragment">
+    app:startDestination="@id/authGateFragment">
 
     <fragment
-        android:id="@+id/hrDashboardFragment"
-        android:name="com.example.emotionsai.ui.hr.HrDashboardFragment"
+        android:id="@+id/hrAnalyticsFragment"
+        android:name="com.example.emotionsai.ui.hr.analytics.HrAnalyticsFragment"
         android:label="Dashboard"/>
+    <fragment
+        android:id="@+id/createEventFragment"
+        android:name="com.example.emotionsai.ui.hr.events.CreateEventFragment"
+        android:label="Create Event">
+    <argument
+        android:name="eventId"
+        app:argType="integer"
+        android:defaultValue="0" />
+
+    <argument
+        android:name="eventTitle"
+        app:argType="string"
+        android:defaultValue="" />
+
+    <argument
+        android:name="eventStartsAt"
+        app:argType="string"
+        android:defaultValue="" />
+
+    <argument
+        android:name="eventEndsAt"
+        app:argType="string"
+        android:defaultValue="" />
+    </fragment>
+    <fragment
+        android:id="@+id/hrProfileFragment"
+        android:name="com.example.emotionsai.ui.hr.profile.HrProfileFragment"
+        android:label="HR Profile">
+    </fragment>
 
     <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.example.emotionsai.ui.profile.ProfileFragment"
-        android:label="Profile"/>
+        android:id="@+id/hrEventsFragment"
+        android:name="com.example.emotionsai.ui.hr.events.HrEventsFragment"
+        android:label="Events" >
+        <action
+            android:id="@+id/action_hrEventsFragment_to_createEventFragment"
+            app:destination="@id/createEventFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/hrRequestsFragment"
+        android:name="com.example.emotionsai.ui.hr.requests.HrRequestsFragment"
+        android:label="Requests" >
+        <action
+            android:id="@+id/action_hrRequestsFragment_to_hrRequestDetailsFragment"
+            app:destination="@id/hrRequestDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hrRequestDetailsFragment"
+        android:name="com.example.emotionsai.ui.hr.requests.HrRequestDetailsFragment"
+        android:label="Request details">
+        <argument
+            android:name="requestId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/faceLoginCameraFragment"
+        android:name="com.example.emotionsai.ui.employee.camera.FaceLoginCameraFragment"
+        android:label="Face Login">
+        <action
+            android:id="@+id/action_faceLogin_to_home"
+            app:destination="@id/hrProfileFragment"
+            app:popUpTo="@id/hrProfileFragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_faceLoginCameraFragment_to_hrAnalyticsFragment"
+            app:destination="@id/hrAnalyticsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/authGateFragment"
+        android:name="com.example.emotionsai.ui.faceauth.gate.AuthGateFragment"
+        android:label="Auth Gate">
+        <action
+            android:id="@+id/action_authGate_to_faceLogin"
+            app:destination="@id/faceLoginCameraFragment" />
+        <action
+            android:id="@+id/action_authGate_to_home"
+            app:destination="@id/hrProfileFragment"
+            app:popUpTo="@id/hrProfileFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
 </navigation>

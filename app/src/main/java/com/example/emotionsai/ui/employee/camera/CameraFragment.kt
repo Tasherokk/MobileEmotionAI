@@ -16,6 +16,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.emotionsai.R
 import com.example.emotionsai.databinding.FragmentCameraBinding
 import com.example.emotionsai.di.ServiceLocator
@@ -34,6 +35,7 @@ class CameraFragment : Fragment() {
     private lateinit var viewModel: CameraViewModel
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
+    private val args: CameraFragmentArgs by navArgs()
 
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -55,8 +57,8 @@ class CameraFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val feedbackRepo = ServiceLocator.feedbackRepository(requireContext())
-        val referenceRepo = ServiceLocator.referenceRepository(requireContext())
-        viewModel = CameraViewModel(feedbackRepo, referenceRepo)
+        val eventRepo = ServiceLocator.eventRepository(requireContext())
+        viewModel = CameraViewModel(feedbackRepo, eventRepo)
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -117,9 +119,6 @@ class CameraFragment : Fragment() {
             takePhoto()
         }
 
-        binding.btnSelectEvent.setOnClickListener {
-            showEventSelectionDialog()
-        }
 
         binding.btnClose.setOnClickListener {
             findNavController().navigateUp()
@@ -127,14 +126,6 @@ class CameraFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.events.observe(viewLifecycleOwner) { events ->
-            binding.btnSelectEvent.visibility = if (events.isEmpty()) View.GONE else View.VISIBLE
-        }
-
-        viewModel.selectedEvent.observe(viewLifecycleOwner) { event ->
-            binding.tvSelectedEvent.text = event?.title ?: "No event selected"
-            binding.tvSelectedEvent.visibility = if (event != null) View.VISIBLE else View.GONE
-        }
 
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -148,14 +139,19 @@ class CameraFragment : Fragment() {
                 }
                 is CameraUiState.Success -> {
                     binding.progressBar.visibility = View.GONE
-                    // Navigate to result screen
+
+                    // 1) сообщаем назад, что фидбэк по ивенту отправлен (см. пункт 3)
+                    findNavController().previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("feedback_submitted_event_id", args.eventId)
+
+                    // 2) навигация в Result
                     val action = CameraFragmentDirections.actionCameraToResult(
-                        emotion = state.result.emotion,
-                        confidence = state.result.confidence,
-                        top3 = state.result.top3.map { "${it.emotion}:${it.prob}" }.toTypedArray()
+                        emotion = state.result.emotion
                     )
                     findNavController().navigate(action)
                 }
+
                 is CameraUiState.Error -> {
                     binding.progressBar.visibility = View.GONE
                     binding.btnCapture.isEnabled = true
@@ -163,27 +159,6 @@ class CameraFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun showEventSelectionDialog() {
-        val events = viewModel.events.value ?: return
-        if (events.isEmpty()) return
-
-        val eventTitles = events.map { it.title }.toTypedArray()
-        val currentSelection = events.indexOf(viewModel.selectedEvent.value)
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Select Event")
-            .setSingleChoiceItems(eventTitles, currentSelection) { dialog, which ->
-                viewModel.selectEvent(events[which])
-                dialog.dismiss()
-            }
-            .setNeutralButton("Clear") { dialog, _ ->
-                viewModel.selectEvent(null)
-                dialog.dismiss()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 
     private fun takePhoto() {
@@ -206,7 +181,7 @@ class CameraFragment : Fragment() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    viewModel.submitPhoto(photoFile)
+                    viewModel.submitPhoto(photoFile, args.eventId)
                 }
             }
         )

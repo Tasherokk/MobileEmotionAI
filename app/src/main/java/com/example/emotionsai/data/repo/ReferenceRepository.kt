@@ -3,7 +3,7 @@ package com.example.emotionsai.data.repo
 import com.example.emotionsai.data.remote.ApiService
 import com.example.emotionsai.data.remote.Company
 import com.example.emotionsai.data.remote.Department
-import com.example.emotionsai.data.remote.Event
+import com.example.emotionsai.data.remote.HrEventDto
 import com.example.emotionsai.util.Result
 
 class ReferenceRepository(
@@ -25,11 +25,11 @@ class ReferenceRepository(
         }
     }
 
-    suspend fun getEvents(active: Boolean? = null, companyId: Int? = null): Result<List<Event>> {
-        return try {
-            Result.Ok(api.getEvents(active, companyId))
-        } catch (e: Exception) {
-            Result.Err(e.message ?: "Failed to load events")
-        }
-    }
+//    suspend fun getEvents(active: Boolean? = null, companyId: Int? = null): Result<List<HrEventDto>> {
+//        return try {
+//            Result.Ok(api.getEvents(active, companyId))
+//        } catch (e: Exception) {
+//            Result.Err(e.message ?: "Failed to load events")
+//        }
+//    }
 }
