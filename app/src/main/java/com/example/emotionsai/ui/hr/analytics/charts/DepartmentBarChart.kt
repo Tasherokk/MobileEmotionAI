@@ -2,12 +2,13 @@ package com.example.emotionsai.ui.hr.analytics.charts
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.example.emotionsai.R
 import com.example.emotionsai.ui.hr.analytics.theme.EmotionColors
 import com.example.emotionsai.ui.hr.analytics.transforms.DepartmentEmotionCount
 
@@ -18,6 +19,9 @@ fun DepartmentStackedBars(
     modifier: Modifier = Modifier
 ) {
     if (items.isEmpty()) return
+
+    val textPrimary = colorResource(R.color.text_primary)
+    val textSecondary = colorResource(R.color.text_secondary)
 
     Column(modifier) {
         Canvas(
@@ -54,20 +58,18 @@ fun DepartmentStackedBars(
                     )
                     yTop += segH
                 }
-
-                // базовая “подпись” — короткая (чтобы не рисовать текст на Canvas, проще ниже списком)
-                // оставим подписи ниже в Column
             }
         }
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(10.dp))
 
-        // подписи департаментов под графиком (минималистично)
+        // подписи
         items.forEach { dept ->
             val total = emotionsOrder.sumOf { e -> dept.emotionCounts[e] ?: 0 }
             Text(
                 text = "${dept.departmentName} — $total",
-                style = MaterialTheme.typography.bodySmall
+                // вместо дефолта: твои цвета
+                color = if (total > 0) textPrimary else textSecondary
             )
         }
     }

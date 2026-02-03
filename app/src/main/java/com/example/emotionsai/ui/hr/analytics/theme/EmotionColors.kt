@@ -10,7 +10,7 @@ object EmotionColors {
         "angry" -> Color(0xFFC62828)      // красный
         "disgust" -> Color(0xFF6A1B9A)    // фиолетовый
         "fear" -> Color(0xFF5D4037)       // коричневый
-        "surprised" -> Color(0xFFEF6C00)  // оранжевый
+        "surprise" -> Color(0xFFEF6C00)  // оранжевый
         else -> Color(0xFF455A64)
     }
 }
