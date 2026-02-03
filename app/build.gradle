@@ -89,6 +89,7 @@ dependencies {
     implementation libs.androidx.camera.view
     implementation libs.mpandroidchart
     implementation libs.material
+    implementation(libs.androidx.compose.material.icons.extended)
 
     configurations.all {
         resolutionStrategy {
