@@ -45,7 +45,7 @@ class HrEventsFragment : Fragment(R.layout.fragment_hr_events) {
             },
             onDelete = { event ->
                 if (!vm.isActive(event)) {
-                    Toast.makeText(requireContext(), "Можно удалить только активный ивент", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Only active events are deletable", Toast.LENGTH_SHORT).show()
                 } else {
                     vm.deleteEvent(event.id)
                 }
@@ -79,14 +79,14 @@ class HrEventsFragment : Fragment(R.layout.fragment_hr_events) {
         }
         vm.filter.observe(viewLifecycleOwner) { f ->
             vb.btnFilters.text = buildString {
-                append("Фильтр: ")
+                append("Filter: ")
                 append(
                     when (f.activity) {
-                        ActivityFilter.ALL -> "все"
-                        ActivityFilter.UPCOMING -> "предстоящие"
-                        ActivityFilter.ONGOING -> "идут"
-                        ActivityFilter.PAST -> "завершенные"
-                        ActivityFilter.EDITABLE -> "редактируемые"
+                        ActivityFilter.ALL -> "all"
+                        ActivityFilter.UPCOMING -> "upcoming"
+                        ActivityFilter.ONGOING -> "ongoing"
+                        ActivityFilter.PAST -> "past"
+                        ActivityFilter.EDITABLE -> "editable"
                     }
                 )
                 if (f.from != null || f.to != null) {
@@ -111,7 +111,7 @@ class HrEventsFragment : Fragment(R.layout.fragment_hr_events) {
     }
     private fun showDateRangePicker() {
         val picker = MaterialDatePicker.Builder.dateRangePicker()
-            .setTitleText("Выберите период")
+            .setTitleText("Choose period")
             .build()
 
         picker.addOnPositiveButtonClickListener { range ->
@@ -127,15 +127,15 @@ class HrEventsFragment : Fragment(R.layout.fragment_hr_events) {
         Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
     private fun showActivityDialog() {
         val items = arrayOf(
-            "Все",
-            "Предстоящие",
-            "Идут сейчас",
-            "Завершенные",
-            "Можно редактировать"
+            "All",
+            "Upcoming",
+            "Ongoing",
+            "Past",
+            "Editable"
         )
 
         android.app.AlertDialog.Builder(requireContext())
-            .setTitle("Активность")
+            .setTitle("Activity")
             .setItems(items) { _, which ->
                 val mode = when (which) {
                     1 -> ActivityFilter.UPCOMING
@@ -146,19 +146,19 @@ class HrEventsFragment : Fragment(R.layout.fragment_hr_events) {
                 }
                 vm.setActivity(mode)
             }
-            .setNegativeButton("Отмена", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
 
     private fun showFilterMenu() {
         val items = arrayOf(
-            "Фильтр по дате",
-            "Фильтр по активности",
-            "Сбросить фильтры"
+            "Filter by date",
+            "Filter by activity",
+            "Drop all filters"
         )
 
         android.app.AlertDialog.Builder(requireContext())
-            .setTitle("Фильтры")
+            .setTitle("Filters")
             .setItems(items) { _, which ->
                 when (which) {
                     0 -> showDateRangePicker()
@@ -166,7 +166,7 @@ class HrEventsFragment : Fragment(R.layout.fragment_hr_events) {
                     2 -> vm.clearFilters()
                 }
             }
-            .setNegativeButton("Отмена", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
 

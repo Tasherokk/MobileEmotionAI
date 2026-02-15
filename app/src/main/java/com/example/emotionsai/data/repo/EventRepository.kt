@@ -4,6 +4,7 @@ import com.example.emotionsai.data.remote.ApiService
 import com.example.emotionsai.data.remote.EmployeeDto
 import com.example.emotionsai.data.remote.EmployeeEventDto
 import com.example.emotionsai.data.remote.EventCreateRequest
+import com.example.emotionsai.data.remote.HrEventDetailsDto
 import com.example.emotionsai.data.remote.HrEventDto
 import com.example.emotionsai.util.Result
 
@@ -49,5 +50,11 @@ class EventRepository(
     } catch (e: Exception) {
         Result.Err(e.message ?: "Failed to delete event")
     }
+    suspend fun getHrEventDetails(id: Int): Result<HrEventDetailsDto> = try {
+        Result.Ok(api.getHrEventDetails(id))
+    } catch (e: Exception) {
+        Result.Err(e.message ?: "Failed to load event details")
+    }
+
 }
 

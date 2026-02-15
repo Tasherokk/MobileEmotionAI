@@ -1,36 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="8dp">
+    android:padding="12dp"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginTop="8dp"
+    android:paddingBottom="10dp"
+    android:background="@drawable/bg_bottom_nav"
+    app:cardCornerRadius="24dp">
 
     <TextView
         android:id="@+id/tvSender"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:text="Sender"/>
+        android:text="Sender"
+        android:textColor="@color/text_primary"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
     <TextView
         android:id="@+id/tvText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Text"/>
+        android:text="Text"
+        android:textColor="@color/text_secondary"
+        android:layout_marginTop="4dp"
+        android:maxLines="10"
+        android:ellipsize="end" />
 
     <TextView
         android:id="@+id/tvFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Файл"
-        android:textColor="#1565C0"
-        android:visibility="gone"/>
+        android:text="File"
+        android:textColor="@color/link"
+        android:layout_marginTop="6dp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tvTime"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:text="time"/>
+        android:text="time"
+        android:textColor="@color/text_hint"
+        android:layout_marginTop="6dp"
+        android:gravity="end" />
 </LinearLayout>

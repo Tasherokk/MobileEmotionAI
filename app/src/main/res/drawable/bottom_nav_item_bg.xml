@@ -1,0 +1,22 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <inset
+            android:insetLeft="10dp"
+            android:insetRight="10dp"
+            android:insetTop="6dp"
+            android:insetBottom="6dp">
+            <shape>
+                <solid android:color="@color/bottom_nav_indicator"/>
+                <corners android:radius="16dp"/>
+                <size android:height="24dp"/>
+                <size android:width="48dp"/>
+            </shape>
+        </inset>
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="@android:color/transparent"/>
+        </shape>
+    </item>
+</selector>

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.emotionsai.data.remote.RequestMessageDto
 import com.example.emotionsai.databinding.ItemRequestMessageBinding
+import com.example.emotionsai.util.formatServerDateTime
 
 class RequestMessagesAdapter(
     private val onFileClick: (String) -> Unit
@@ -45,7 +46,7 @@ class RequestMessagesAdapter(
 
         fun bind(m: RequestMessageDto) {
             vb.tvSender.text = "You"
-            vb.tvTime.text = m.created_at
+            vb.tvTime.text = formatServerDateTime(m.created_at)
 
             vb.tvText.isVisible = !m.text.isNullOrBlank()
             vb.tvText.text = m.text ?: ""
@@ -65,7 +66,7 @@ class RequestMessagesAdapter(
 
         fun bind(m: RequestMessageDto) {
             vb.tvSender.text = m.sender_name
-            vb.tvTime.text = m.created_at
+            vb.tvTime.text = formatServerDateTime(m.created_at)
 
             vb.tvText.isVisible = !m.text.isNullOrBlank()
             vb.tvText.text = m.text ?: ""

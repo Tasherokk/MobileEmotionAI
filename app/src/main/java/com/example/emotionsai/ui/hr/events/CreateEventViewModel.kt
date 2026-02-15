@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.emotionsai.data.remote.EmployeeDto
 import com.example.emotionsai.data.remote.EventCreateRequest
+import com.example.emotionsai.data.remote.HrEventDetailsDto
 import com.example.emotionsai.data.repo.EventRepository
 import com.example.emotionsai.util.Result
 import kotlinx.coroutines.launch
@@ -26,6 +27,9 @@ class CreateEventViewModel(
     private val _employees = MutableLiveData<List<EmployeeDto>>()
     val employees: LiveData<List<EmployeeDto>> = _employees
 
+    private val _eventDetails = MutableLiveData<HrEventDetailsDto?>()
+    val eventDetails: LiveData<HrEventDetailsDto?> = _eventDetails
+
     fun loadEmployees() {
         viewModelScope.launch {
             when (val res = repo.getCompanyEmployees()) {
@@ -35,10 +39,21 @@ class CreateEventViewModel(
         }
     }
 
+    fun loadEventDetails(eventId: Int) {
+        viewModelScope.launch {
+            _loading.value = true
+            when (val res = repo.getHrEventDetails(eventId)) {
+                is Result.Ok -> _eventDetails.value = res.value
+                is Result.Err -> _error.value = res.message
+            }
+            _loading.value = false
+        }
+    }
+
     fun createEvent(
         title: String,
-        start: String,
-        end: String?,
+        startIso: String,
+        endIso: String?,
         companyId: Int,
         participantIds: List<Int>?
     ) {
@@ -46,8 +61,8 @@ class CreateEventViewModel(
 
         val req = EventCreateRequest(
             title = title,
-            starts_at = start,
-            ends_at = end,
+            starts_at = startIso,
+            ends_at = endIso,
             company = companyId,
             participants = participantIds
         )
@@ -60,11 +75,12 @@ class CreateEventViewModel(
             _loading.value = false
         }
     }
+
     fun updateEvent(
         eventId: Int,
         title: String,
-        start: String,
-        end: String?,
+        startIso: String,
+        endIso: String?,
         companyId: Int,
         participantIds: List<Int>?
     ) {
@@ -72,8 +88,9 @@ class CreateEventViewModel(
 
         val req = EventCreateRequest(
             title = title,
-            starts_at = start,
-            ends_at = end,
+            starts_at = startIso,
+            ends_at = endIso,
+            company = companyId,
             participants = participantIds
         )
 
@@ -90,4 +107,3 @@ class CreateEventViewModel(
         _success.value = null
     }
 }
-

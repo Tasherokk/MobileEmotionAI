@@ -33,7 +33,7 @@ class EmployeeRequestDetailsFragment : Fragment(R.layout.fragment_employee_reque
     private val pickFile = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             pendingFile = uriToTempFile(uri)
-            toast("Файл прикреплён")
+            toast("A file attached")
         }
     }
 
@@ -51,12 +51,12 @@ class EmployeeRequestDetailsFragment : Fragment(R.layout.fragment_employee_reque
 
         vb.btnSend.setOnClickListener {
             val details = vm.details.value
-            if (details?.status == "CLOSED") return@setOnClickListener toast("Запрос закрыт")
+            if (details?.status == "CLOSED") return@setOnClickListener toast("Request is closed")
 
             val text = vb.inputText.text?.toString()?.trim()
             val file = pendingFile
 
-            if ((text.isNullOrBlank()) && file == null) return@setOnClickListener toast("Введите текст или выберите файл")
+            if ((text.isNullOrBlank()) && file == null) return@setOnClickListener toast("Enter a message or attach a file")
 
             vm.send(args.requestId, text, file)
             vb.inputText.setText("")

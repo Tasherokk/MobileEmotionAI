@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_surface">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/navHost"
@@ -23,6 +24,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:itemIconTint="@color/primary"/>
+
+        android:background="@drawable/bg_bottom_nav"
+        android:backgroundTint="@color/white"
+
+
+        app:itemIconTint="@color/primary"
+        app:itemTextColor="@color/primary"
+        app:itemRippleColor="@color/text_secondary"
+
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_employee"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

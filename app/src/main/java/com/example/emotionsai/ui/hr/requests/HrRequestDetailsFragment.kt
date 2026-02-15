@@ -34,7 +34,7 @@ class HrRequestDetailsFragment : Fragment(R.layout.fragment_hr_request_details) 
     private val pickFile = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             pendingFile = uriToTempFile(uri)
-            toast("Файл прикреплён")
+            toast("A file attached")
         }
     }
 
@@ -45,18 +45,18 @@ class HrRequestDetailsFragment : Fragment(R.layout.fragment_hr_request_details) 
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
         }
 
-        vb.rvMessages.layoutManager = LinearLayoutManager(requireContext()).apply { stackFromEnd = true }
+        vb.rvMessages.layoutManager = LinearLayoutManager(requireContext()).apply { stackFromEnd = false }
         vb.rvMessages.adapter = adapter
 
         vb.btnAttach.setOnClickListener { pickFile.launch("*/*") }
 
         vb.btnSend.setOnClickListener {
             val details = vm.details.value
-            if (details?.status == "CLOSED") return@setOnClickListener toast("Запрос закрыт")
+            if (details?.status == "CLOSED") return@setOnClickListener toast("Request is closed")
 
             val text = vb.inputText.text?.toString()?.trim()
             val file = pendingFile
-            if ((text.isNullOrBlank()) && file == null) return@setOnClickListener toast("Введите текст или выберите файл")
+            if ((text.isNullOrBlank()) && file == null) return@setOnClickListener toast("Enter a message or attach a file")
 
             vm.send(args.requestId, text, file)
             vb.inputText.setText("")
@@ -65,13 +65,13 @@ class HrRequestDetailsFragment : Fragment(R.layout.fragment_hr_request_details) 
 
         vb.btnInProgress.setOnClickListener {
             val d = vm.details.value ?: return@setOnClickListener
-            if (d.status == "CLOSED") return@setOnClickListener toast("Нельзя менять закрытый запрос")
+            if (d.status == "CLOSED") return@setOnClickListener toast("Can't change the closed request")
             vm.setInProgress(args.requestId)
         }
 
         vb.btnClose.setOnClickListener {
             val d = vm.details.value ?: return@setOnClickListener
-            if (d.status == "CLOSED") return@setOnClickListener toast("Уже закрыт")
+            if (d.status == "CLOSED") return@setOnClickListener toast("Request is already closed")
             vm.close(args.requestId)
         }
 
