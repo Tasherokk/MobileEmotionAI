@@ -131,14 +131,20 @@ class CameraFragment : Fragment() {
             when (state) {
                 is CameraUiState.Idle -> {
                     binding.progressBar.visibility = View.GONE
+                    binding.loadingOverlay.visibility = View.GONE
+                    binding.tvLoading.visibility = View.GONE
                     binding.btnCapture.isEnabled = true
                 }
                 is CameraUiState.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
+                    binding.loadingOverlay.visibility = View.VISIBLE
+                    binding.tvLoading.visibility = View.VISIBLE
                     binding.btnCapture.isEnabled = false
                 }
                 is CameraUiState.Success -> {
                     binding.progressBar.visibility = View.GONE
+                    binding.loadingOverlay.visibility = View.GONE
+                    binding.tvLoading.visibility = View.GONE
 
                     // 1) сообщаем назад, что фидбэк по ивенту отправлен (см. пункт 3)
                     findNavController().previousBackStackEntry
@@ -154,6 +160,8 @@ class CameraFragment : Fragment() {
 
                 is CameraUiState.Error -> {
                     binding.progressBar.visibility = View.GONE
+                    binding.loadingOverlay.visibility = View.GONE
+                    binding.tvLoading.visibility = View.GONE
                     binding.btnCapture.isEnabled = true
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
                 }

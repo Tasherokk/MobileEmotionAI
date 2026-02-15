@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#1E3A8A</color>
+<!--    <color name="primary">#99C34A</color>-->
     <color name="selected_button">#AF1E3A8A</color>
     <color name="bg_surface">#F6F8FB</color>
     <color name="text_primary">#0F172A</color>
@@ -13,5 +14,6 @@
     <color name="card_primary">#FFFFFF</color>
     <color name="card_surface">#E2E8F0</color>
     <color name="text_on_primary_muted">#797676</color>
-
+    <color name="bottom_nav_indicator">#1A1E3A8A</color>
+    <color name="link">#2196F3</color>
 </resources>

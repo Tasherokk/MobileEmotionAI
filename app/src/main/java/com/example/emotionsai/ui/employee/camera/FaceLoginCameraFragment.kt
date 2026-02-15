@@ -90,6 +90,8 @@ class FaceLoginCameraFragment : Fragment() {
         binding.tvSelectedEvent.visibility = View.GONE
 
         binding.progressBar.visibility = View.GONE
+        binding.loadingOverlay.visibility = View.GONE
+        binding.tvLoading.visibility = View.GONE
         binding.btnCapture.isEnabled = true
     }
 
@@ -100,9 +102,9 @@ class FaceLoginCameraFragment : Fragment() {
             safeContext { ctx ->
                 MaterialAlertDialogBuilder(ctx)
                     .setTitle("Face ID")
-                    .setMessage("Отменить Face ID проверку и перейти к логину?")
-                    .setNegativeButton("Отмена", null)
-                    .setPositiveButton("Перейти") { _, _ ->
+                    .setMessage("Cancel Face ID and go to login page?")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("Go") { _, _ ->
                         // Здесь токены НЕ чистим автоматически.
                         // Пользователь сам отменил проверку.
                         goLoginHard(clearTokens = false)
@@ -168,7 +170,7 @@ class FaceLoginCameraFragment : Fragment() {
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     if (!photoFile.exists() || photoFile.length() == 0L) {
-                        Toast.makeText(requireContext(), "Фото не сохранилось. Попробуйте ещё раз.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Couldn't save the photo. Try one more time.", Toast.LENGTH_SHORT).show()
                         return
                     }
                     verifyFace(photoFile)
@@ -181,12 +183,14 @@ class FaceLoginCameraFragment : Fragment() {
         val stableFile = try {
             copyToStableDir(photoFile)
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Не удалось подготовить фото: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Couldn't save the photo. Try one more time. Error: ${e.message}", Toast.LENGTH_SHORT).show()
             return
         }
 
         safeUi {
             it.progressBar.visibility = View.VISIBLE
+            binding.loadingOverlay.visibility = View.VISIBLE
+            binding.tvLoading.visibility = View.VISIBLE
             it.btnCapture.isEnabled = false
         }
 
@@ -208,6 +212,8 @@ class FaceLoginCameraFragment : Fragment() {
 
             safeUi {
                 it.progressBar.visibility = View.GONE
+                binding.loadingOverlay.visibility = View.GONE
+                binding.tvLoading.visibility = View.GONE
                 it.btnCapture.isEnabled = true
             }
 
@@ -223,7 +229,7 @@ class FaceLoginCameraFragment : Fragment() {
                         safeContext { ctx ->
                             MaterialAlertDialogBuilder(ctx)
                                 .setTitle("Face ID")
-                                .setMessage("Лимит попыток исчерпан. Войдите по логину и паролю.")
+                                .setMessage("Limits exceeded. Go to login page")
                                 .setCancelable(false)
                                 .setPositiveButton("OK") { _, _ ->
                                     ServiceLocator.authRepository(ctx).logout()
@@ -235,8 +241,8 @@ class FaceLoginCameraFragment : Fragment() {
                         safeContext { ctx ->
                             MaterialAlertDialogBuilder(ctx)
                                 .setTitle("Face ID")
-                                .setMessage("Лицо не совпало.\nОсталось попыток: $attemptsLeft")
-                                .setPositiveButton("Повторить", null)
+                                .setMessage("Your face doesn't match.\nYou have $attemptsLeft attempts left")
+                                .setPositiveButton("Try again", null)
                                 .show()
                         }
                     }

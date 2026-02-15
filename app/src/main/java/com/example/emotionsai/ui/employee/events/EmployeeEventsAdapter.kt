@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.emotionsai.data.remote.EmployeeEventDto
 import com.example.emotionsai.databinding.ItemEmployeeEventBinding
+import com.example.emotionsai.util.formatServerDateTime
 
 class EmployeeEventsAdapter(
     private val onClick: (EmployeeEventDto) -> Unit
@@ -35,8 +36,9 @@ class EmployeeEventsAdapter(
         fun bind(item: EmployeeEventDto) {
             vb.tvTitle.text = item.title
 
-            val end = item.ends_at ?: "—"
-            vb.tvDates.text = "${item.starts_at} — $end"
+            val end = formatServerDateTime( item.ends_at) ?: "—"
+            val start = formatServerDateTime(item.starts_at)
+            vb.tvDates.text = "${start} — $end"
 
             if (item.has_feedback) {
                 vb.tvStatus.text = "Completed"

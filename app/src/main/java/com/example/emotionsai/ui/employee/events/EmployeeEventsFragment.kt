@@ -50,6 +50,7 @@ class EmployeeEventsFragment : Fragment(R.layout.fragment_employee_events) {
         }
 
         vm.events.observe(viewLifecycleOwner) { list ->
+            vb.emptyContainer.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
             adapter.submit(list)
 
         }

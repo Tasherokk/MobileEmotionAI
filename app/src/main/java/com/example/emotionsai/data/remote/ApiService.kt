@@ -220,6 +220,17 @@ data class HrRequestDetailsDto(
     val messages: List<RequestMessageDto>
 )
 
+data class HrEventDetailsDto(
+    val id: Int,
+    val title: String,
+    val starts_at: String,
+    val ends_at: String?,
+    val company: Int,
+    val company_name: String,
+    val participants: List<Int>,
+    val participants_count: Int
+)
+
 // ---------- Bodies ----------
 
 data class CreateEmployeeRequestBody(
@@ -345,4 +356,8 @@ interface ApiService {
         @Path("id") id: Int,
         @Body body: UpdateRequestStatusBody
     ): HrRequestDetailsDto
+
+    @GET("api/hr/events/{id}/")
+    suspend fun getHrEventDetails(@Path("id") id: Int): HrEventDetailsDto
+
 }

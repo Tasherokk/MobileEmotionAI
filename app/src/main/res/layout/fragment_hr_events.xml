@@ -3,42 +3,81 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_surface">
 
     <!-- Header -->
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/headerLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="12dp"
+        android:layout_margin="12dp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/stroke_soft"
+        app:cardBackgroundColor="@color/card_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputSearchWrapper"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconDrawable="@android:drawable/ic_menu_search">
+            android:orientation="vertical"
+            android:padding="14dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputSearch"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputSearchWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search events..." />
-        </com.google.android.material.textfield.TextInputLayout>
+                app:boxBackgroundMode="outline"
+                app:boxBackgroundColor="@color/card_primary"
+                app:boxStrokeColor="@color/stroke_soft"
+                app:boxStrokeWidth="1dp"
+                app:boxCornerRadiusTopStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusBottomEnd="14dp"
+                app:startIconDrawable="@android:drawable/ic_menu_search"
+                app:startIconTint="@color/text_secondary"
+                app:hintTextColor="@color/text_hint">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFilters"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Filters"
-            app:icon="@android:drawable/ic_menu_sort_by_size"
-            app:iconGravity="textStart" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Search events..."
+                    android:paddingStart="50dp"
+                    android:paddingEnd="20dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:singleLine="true"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:text="Filters"
+                android:textAllCaps="false"
+                android:textColor="@color/primary"
+                app:icon="@android:drawable/ic_menu_sort_by_size"
+                app:iconTint="@color/primary"
+                app:iconGravity="textStart"
+                app:cornerRadius="12dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/stroke_soft"
+                app:backgroundTint="@android:color/transparent"
+                android:minHeight="44dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- List always starts UNDER header -->
     <androidx.recyclerview.widget.RecyclerView
@@ -46,6 +85,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
         android:paddingBottom="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,6 +101,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
         app:srcCompat="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/primary"
+        app:tint="@color/white"
+        app:rippleColor="@color/card_surface"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

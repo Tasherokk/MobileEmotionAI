@@ -31,6 +31,8 @@ class CreateRequestFragment : Fragment(R.layout.fragment_create_request) {
             vb.dropType.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list.map { it.name }))
             vb.dropType.setOnItemClickListener { _, _, pos, _ -> selectedTypeId = list[pos].id }
             vb.dropType.setOnClickListener { vb.dropType.showDropDown() }
+            vb.dropType.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) vb.dropType.showDropDown() }
+            vb.dropType.setDropDownBackgroundResource(R.drawable.bg_dropdown_popup_simple)
             toast("hrs: ${list.size}")
         }
 
@@ -39,6 +41,8 @@ class CreateRequestFragment : Fragment(R.layout.fragment_create_request) {
             vb.dropHr.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list.map { it.name }))
             vb.dropHr.setOnItemClickListener { _, _, pos, _ -> selectedHrId = list[pos].id }
             vb.dropHr.setOnClickListener { vb.dropHr.showDropDown() }
+            vb.dropHr.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) vb.dropHr.showDropDown() }
+            vb.dropHr.setDropDownBackgroundResource(R.drawable.bg_dropdown_popup_simple)
             toast("hrs: ${list.size}")
         }
 
@@ -64,9 +68,9 @@ class CreateRequestFragment : Fragment(R.layout.fragment_create_request) {
             val hrId = selectedHrId
             val comment = vb.inputComment.text?.toString()?.trim().orEmpty()
 
-            if (typeId == null) return@setOnClickListener toast("Выберите тип")
-            if (hrId == null) return@setOnClickListener toast("Выберите HR")
-            if (comment.isBlank()) return@setOnClickListener toast("Введите комментарий")
+            if (typeId == null) return@setOnClickListener toast("Choose the type")
+            if (hrId == null) return@setOnClickListener toast("Choose HR")
+            if (comment.isBlank()) return@setOnClickListener toast("Add a comment")
 
             vm.create(typeId, hrId, comment)
         }

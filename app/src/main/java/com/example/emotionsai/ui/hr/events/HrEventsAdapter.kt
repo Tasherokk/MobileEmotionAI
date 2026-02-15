@@ -1,15 +1,15 @@
 package com.example.emotionsai.ui.hr.events
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.emotionsai.R
 import com.example.emotionsai.data.remote.HrEventDto
 import com.example.emotionsai.databinding.ItemHrEventBinding
-import java.time.OffsetDateTime
+import com.example.emotionsai.util.formatServerDateTime
+import androidx.core.content.ContextCompat
 
 class HrEventsAdapter(
     private val isActive: (HrEventDto) -> Boolean,
@@ -29,20 +29,42 @@ class HrEventsAdapter(
         return VH(vb)
     }
 
+
+
     override fun onBindViewHolder(h: VH, position: Int) {
         val e = getItem(position)
         val active = isActive(e)
 
+        val startDate = formatServerDateTime(e.starts_at)
+        val endDate = formatServerDateTime(e.ends_at)
+
         h.vb.tvTitle.text = e.title
-        h.vb.tvDates.text = "${e.starts_at} — ${e.ends_at ?: "no end"}"
+        h.vb.tvDates.text = "${startDate} — ${endDate ?: "no end"}"
         h.vb.tvParticipants.text = "Participants: ${e.participants_count}"
+        h.vb.badgeActive.text = if (active) "ACTIVE" else "PAST"
 
-        h.vb.badgeActive.visibility = if (active) View.VISIBLE else View.GONE
+        val ctx = h.itemView.context
 
+        val enabledEditColor = ContextCompat.getColor(ctx, R.color.primary)
+        val enabledDeleteColor = ContextCompat.getColor(ctx, R.color.error)
+        val disabledColor = ContextCompat.getColor(ctx, R.color.text_secondary) // серый
+
+        // --- Edit ---
         h.vb.btnEdit.isEnabled = active
-        h.vb.btnDelete.isEnabled = active
+        h.vb.btnEdit.setTextColor(if (active) enabledEditColor else disabledColor)
+        h.vb.btnEdit.strokeColor = android.content.res.ColorStateList.valueOf(
+            if (active) enabledEditColor else disabledColor
+        )
 
-        h.vb.btnEdit.setOnClickListener { onEdit(e) }
-        h.vb.btnDelete.setOnClickListener { onDelete(e) }
+        // --- Delete ---
+        h.vb.btnDelete.isEnabled = active
+        h.vb.btnDelete.setTextColor(if (active) enabledDeleteColor else disabledColor)
+        h.vb.btnDelete.strokeColor = android.content.res.ColorStateList.valueOf(
+            if (active) enabledDeleteColor else disabledColor
+        )
+
+        h.vb.btnEdit.setOnClickListener { if (active) onEdit(e) }
+        h.vb.btnDelete.setOnClickListener { if (active) onDelete(e) }
     }
+
 }

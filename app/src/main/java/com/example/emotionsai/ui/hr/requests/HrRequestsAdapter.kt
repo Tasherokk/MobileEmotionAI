@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.emotionsai.data.remote.HrRequestItemDto
 import com.example.emotionsai.databinding.ItemHrRequestBinding
+import com.example.emotionsai.util.formatServerDateTime
 
 class HrRequestsAdapter(
     private val onClick: (HrRequestItemDto) -> Unit
@@ -32,8 +33,8 @@ class HrRequestsAdapter(
             vb.tvTitle.text = item.type_name
             vb.tvSubtitle.text = "From: ${item.employee_name} (@${item.employee_username})"
             vb.tvStatus.text = item.status
-            vb.tvCreatedAt.text = item.created_at
-            vb.tvLastMessage.text = item.last_message_at ?: "—"
+            vb.tvCreatedAt.text = formatServerDateTime(item.created_at)
+            vb.tvLastMessage.text = formatServerDateTime(item.last_message_at) ?: "—"
             vb.tvMessagesCount.text = item.messages_count.toString()
 
             vb.root.setOnClickListener { onClick(item) }
