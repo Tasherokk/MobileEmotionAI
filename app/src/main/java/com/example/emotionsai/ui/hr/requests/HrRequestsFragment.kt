@@ -8,8 +8,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.emotionsai.R
+import com.example.emotionsai.data.remote.HrRequestItemDto
 import com.example.emotionsai.databinding.FragmentHrRequestsBinding
 import com.example.emotionsai.di.ServiceLocator
+import com.google.android.material.tabs.TabLayout
 
 class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
 
@@ -22,6 +24,10 @@ class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
 
     private lateinit var adapter: HrRequestsAdapter
 
+    // ✅ Храним все элементы и фильтруем по табу
+    private var allItems: List<HrRequestItemDto> = emptyList()
+    private var selectedStatus: String = "OPEN" // default
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _vb = FragmentHrRequestsBinding.bind(view)
 
@@ -33,6 +39,8 @@ class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
 
         vb.rvRequests.layoutManager = LinearLayoutManager(requireContext())
         vb.rvRequests.adapter = adapter
+
+        setupTabs()
 
         vb.swipeRefresh.setOnRefreshListener { vm.load() }
 
@@ -47,7 +55,44 @@ class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
             if (!it.isNullOrBlank()) Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
 
-        vm.items.observe(viewLifecycleOwner) { adapter.submitList(it) }
+        // ✅ получили список → сохранили allItems → применили фильтр
+        vm.items.observe(viewLifecycleOwner) { list ->
+            allItems = list ?: emptyList()
+            applyFilter()
+        }
+    }
+
+    private fun setupTabs() {
+        // Если tabsStatus нет в xml — добавь TabLayout с id tabsStatus
+        val tabs = vb.tabsStatus
+
+        // ✅ чтобы не добавлять табы повторно при пересоздании view
+        if (tabs.tabCount == 0) {
+            tabs.addTab(tabs.newTab().setText("OPEN").setTag("OPEN"), true)
+            tabs.addTab(tabs.newTab().setText("IN PROGRESS").setTag("IN_PROGRESS"))
+            tabs.addTab(tabs.newTab().setText("CLOSED").setTag("CLOSED"))
+        }
+
+        // на всякий: выставим selectedStatus по текущему выбранному табу
+        selectedStatus = (tabs.getTabAt(tabs.selectedTabPosition)?.tag as? String) ?: "OPEN"
+
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                selectedStatus = (tab.tag as? String) ?: "OPEN"
+                applyFilter()
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+    }
+
+    private fun applyFilter() {
+        val filtered = allItems.filter { it.status == selectedStatus }
+        adapter.submitList(filtered)
+
+        // если у тебя есть empty state — можешь тут включать/выключать
+        // vb.tvEmpty.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
     }
 
     override fun onResume() {

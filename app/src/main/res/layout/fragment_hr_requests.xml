@@ -1,84 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipeRefresh"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_surface">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!-- TABS -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabsStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp"
+        android:background="@color/card_primary"
+        app:tabRippleColor="@color/stroke_soft"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorColor="@color/primary"
+        app:tabSelectedTextColor="@color/text_primary"
+        app:tabTextColor="@color/text_secondary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- LIST -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRequests"
+    <!-- LIST AREA -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/bg_surface"
+        app:layout_constraintTop_toBottomOf="@id/tabsStatus"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="14dp"
-            android:paddingBottom="18dp"
-            android:clipToPadding="false"
-            android:scrollbars="none"
-            android:overScrollMode="never" />
+            android:layout_height="match_parent">
 
-        <!-- LOADING -->
-        <ProgressBar
-            android:id="@+id/progress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="center"
-            android:indeterminateTint="@color/primary"
-            android:visibility="gone" />
-
-        <!-- EMPTY / ERROR STATE -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:visibility="gone">
-
-            <!-- можно заменить на свою иконку, id не нужен -->
-            <TextView
-                android:id="@+id/tvStateIcon"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:gravity="center"
-                android:text="⚠️"
-                android:textSize="28sp"
-                android:background="@color/card_surface"
-                android:textColor="@color/text_primary"
-                android:padding="10dp" />
-
-            <TextView
-                android:id="@+id/tvError"
+            <!-- LIST -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRequests"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:gravity="center"
-                android:text="Ошибка"
-                android:textColor="@color/error"
-                android:textSize="14sp"
-                android:fontFamily="sans-serif-medium"
+                android:layout_height="match_parent"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="18dp"
+                android:clipToPadding="false"
+                android:scrollbars="none"
+                android:overScrollMode="never" />
+
+            <!-- LOADING -->
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/primary"
                 android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/tvStateHint"
+            <!-- EMPTY / ERROR STATE -->
+            <LinearLayout
+                android:id="@+id/stateContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Потяни вниз, чтобы обновить."
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:visibility="gone" />
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:visibility="gone">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvStateIcon"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:gravity="center"
+                    android:text="⚠️"
+                    android:textSize="28sp"
+                    android:background="@color/card_surface"
+                    android:textColor="@color/text_primary"
+                    android:padding="10dp" />
 
-    </FrameLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                <TextView
+                    android:id="@+id/tvError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center"
+                    android:text="Ошибка"
+                    android:textColor="@color/error"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvStateHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:text="Потяни вниз, чтобы обновить."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
