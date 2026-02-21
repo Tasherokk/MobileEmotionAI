@@ -156,7 +156,8 @@ object ServiceLocator {
     fun employeeRequestDetailsVMFactory(ctx: Context) = object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             val repo = requestRepository(ctx)
-            return EmployeeRequestDetailsViewModel(repo) as T
+            val ts = tokenStorage(ctx)
+            return EmployeeRequestDetailsViewModel(repo, ts) as T
         }
     }
 
@@ -170,7 +171,8 @@ object ServiceLocator {
     fun hrRequestDetailsVMFactory(ctx: Context) = object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             val repo = requestRepository(ctx)
-            return HrRequestDetailsViewModel(repo) as T
+            val ts = tokenStorage(ctx)
+            return HrRequestDetailsViewModel(repo, ts) as T
         }
     }
 

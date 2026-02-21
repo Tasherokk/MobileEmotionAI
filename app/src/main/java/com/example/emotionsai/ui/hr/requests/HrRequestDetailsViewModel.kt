@@ -1,14 +1,21 @@
 package com.example.emotionsai.ui.hr.requests
 
 import androidx.lifecycle.*
+import com.example.emotionsai.data.local.TokenStorage
+import com.example.emotionsai.data.remote.ChatWebSocket
 import com.example.emotionsai.data.remote.HrRequestDetailsDto
+import com.example.emotionsai.data.remote.RequestMessageDto
 import com.example.emotionsai.data.repo.RequestRepository
 import com.example.emotionsai.util.Result
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.io.File
 
 class HrRequestDetailsViewModel(
-    private val repo: RequestRepository
+    private val repo: RequestRepository,
+    private val tokenStorage: TokenStorage,
+    private val chatWs: ChatWebSocket = ChatWebSocket()
 ) : ViewModel() {
 
     private val _loading = MutableLiveData(false)
@@ -23,6 +30,8 @@ class HrRequestDetailsViewModel(
     private val _details = MutableLiveData<HrRequestDetailsDto?>(null)
     val details: LiveData<HrRequestDetailsDto?> = _details
 
+    private var wsJob: Job? = null
+
     fun load(id: Int) {
         _loading.value = true
         viewModelScope.launch {
@@ -30,10 +39,38 @@ class HrRequestDetailsViewModel(
                 is Result.Ok -> {
                     _details.value = res.value
                     _error.value = null
+                    connectWs(id)
                 }
                 is Result.Err -> _error.value = res.message
             }
             _loading.value = false
+        }
+    }
+
+    private fun connectWs(requestId: Int) {
+        wsJob?.cancel()
+        val token = tokenStorage.getAccess() ?: return
+        wsJob = viewModelScope.launch {
+            chatWs.connect(requestId, token)
+                .catch { /* WS error — silent, REST still works */ }
+                .collect { wsMsg ->
+                    val current = _details.value ?: return@collect
+                    if (current.messages.any { it.id == wsMsg.id }) return@collect
+
+                    val newMsg = RequestMessageDto(
+                        id = wsMsg.id,
+                        sender = wsMsg.sender,
+                        sender_username = wsMsg.sender_username,
+                        sender_name = wsMsg.sender_name,
+                        text = wsMsg.text,
+                        file = wsMsg.file,
+                        created_at = wsMsg.created_at,
+                        is_mine = false
+                    )
+                    _details.value = current.copy(
+                        messages = current.messages + newMsg
+                    )
+                }
         }
     }
 
@@ -81,5 +118,10 @@ class HrRequestDetailsViewModel(
             }
             _loading.value = false
         }
+    }
+
+    override fun onCleared() {
+        wsJob?.cancel()
+        super.onCleared()
     }
 }
