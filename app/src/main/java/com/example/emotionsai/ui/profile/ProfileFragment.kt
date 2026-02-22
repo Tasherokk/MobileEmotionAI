@@ -24,7 +24,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _vb = FragmentProfileBinding.bind(view)
-
+        vb.swFaceLogin.isChecked = ServiceLocator.settingsStorage(requireContext()).isFaceIdEnabled()
         // Setup logout button first, before any loading state changes
         vb.btnLogout.setOnClickListener { 
             Log.d("ProfileFragment", "Logout button clicked")
@@ -90,7 +90,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 requireActivity().finish()
             }
         }
-        ServiceLocator.settingsStorage(requireContext()).setFaceIdEnabled(false)
         vm.loadMe()
     }
 

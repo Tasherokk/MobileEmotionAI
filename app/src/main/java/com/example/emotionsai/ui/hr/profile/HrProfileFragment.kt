@@ -22,17 +22,23 @@ class HrProfileFragment : Fragment(R.layout.fragment_hr_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _vb = FragmentHrProfileBinding.bind(view)
 
-        vb.btnLogout.setOnClickListener { showLogoutDialog() }
-        vb.swFaceLogin.setOnClickListener {
-            ServiceLocator.settingsStorage(requireContext()).setFaceIdEnabled(vb.swFaceLogin.isChecked)
+        val settings = ServiceLocator.settingsStorage(requireContext())
+
+        // ✅ 1) выставляем сохранённое состояние
+        vb.swFaceLogin.isChecked = settings.isFaceIdEnabled()  // <- имя метода подстрой под свой storage
+
+        // ✅ 2) сохраняем новое состояние
+        vb.swFaceLogin.setOnCheckedChangeListener { _, isChecked ->
+            settings.setFaceIdEnabled(isChecked)
         }
+
+        vb.btnLogout.setOnClickListener { showLogoutDialog() }
+
         vm.me.observe(viewLifecycleOwner) { me ->
             me ?: return@observe
-
             vb.tvUsername.text = me.name.ifBlank { me.username }
             vb.tvHello.text = me.name.ifBlank { me.username }
             vb.tvRole.text = "HR Manager"
-
             vb.tvCompanyName.text = me.company_name ?: "—"
             vb.tvDepartmentName.text = me.department_name ?: "—"
         }

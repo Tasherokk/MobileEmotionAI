@@ -57,6 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Composer -->
+    <!-- Composer -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/composerCard"
         android:layout_width="0dp"
@@ -71,66 +72,124 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- ✅ ВЕРТИКАЛЬНЫЙ контейнер -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <ImageButton
-                android:id="@+id/btnAttach"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:contentDescription="attach"
-                android:src="@android:drawable/ic_menu_add"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:scaleType="centerInside"
-                app:tint="@color/primary" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
+            <!-- ✅ Attachment preview (скрыто по умолчанию) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/attachmentCard"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusTopStart="14dp"
-                app:boxCornerRadiusTopEnd="14dp"
-                app:boxCornerRadiusBottomStart="14dp"
-                app:boxCornerRadiusBottomEnd="14dp"
-                app:boxStrokeColor="@color/stroke_soft"
-                app:hintTextColor="@color/text_hint"
-                app:boxBackgroundColor="@color/card_primary">
+                android:visibility="gone"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/stroke_soft"
+                app:cardBackgroundColor="@color/card_surface"
+                android:layout_marginBottom="8dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputText"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Сообщение"
-                    android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_hint"
-                    android:maxLines="4"
-                    android:minLines="1"
-                    android:inputType="textMultiLine"
-                    android:imeOptions="actionSend"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="10dp">
 
-            <ImageButton
-                android:id="@+id/btnSend"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:contentDescription="send"
-                android:src="@android:drawable/ic_menu_send"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:scaleType="centerInside"
-                app:tint="@color/primary" />
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@android:drawable/ic_menu_save"
+                        app:tint="@color/text_secondary"
+                        android:contentDescription="file" />
+
+                    <TextView
+                        android:id="@+id/tvAttachmentName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="file.pdf"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_primary" />
+
+                    <ImageButton
+                        android:id="@+id/btnRemoveAttachment"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@android:drawable/ic_menu_close_clear_cancel"
+                        app:tint="@color/text_secondary"
+                        android:contentDescription="remove" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ✅ Твой ряд composer как был -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageButton
+                    android:id="@+id/btnAttach"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="attach"
+                    android:src="@android:drawable/ic_menu_add"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    app:tint="@color/primary" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp"
+                    app:boxStrokeColor="@color/stroke_soft"
+                    app:hintTextColor="@color/text_hint"
+                    app:boxBackgroundColor="@color/card_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/inputText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Сообщение"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_hint"
+                        android:maxLines="4"
+                        android:minLines="1"
+                        android:inputType="textMultiLine"
+                        android:imeOptions="actionSend"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/btnSend"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="send"
+                    android:src="@android:drawable/ic_menu_send"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    app:tint="@color/primary" />
+            </LinearLayout>
+
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
