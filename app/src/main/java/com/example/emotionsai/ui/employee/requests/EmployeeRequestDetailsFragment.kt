@@ -1,8 +1,10 @@
 package com.example.emotionsai.ui.employee.requests
 
+import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,12 +30,16 @@ class EmployeeRequestDetailsFragment : Fragment(R.layout.fragment_employee_reque
     }
 
     private lateinit var adapter: RequestMessagesAdapter
+
     private var pendingFile: File? = null
+    private var pendingFileName: String? = null
 
     private val pickFile = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
-            pendingFile = uriToTempFile(uri)
-            toast("A file attached")
+            val name = requireContext().contentResolver.getDisplayName(uri) ?: "attachment"
+            pendingFile = uriToTempFile(uri, name)
+            pendingFileName = name
+            showAttachment(name)
         }
     }
 
@@ -44,10 +50,12 @@ class EmployeeRequestDetailsFragment : Fragment(R.layout.fragment_employee_reque
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
         }
 
-        vb.rvMessages.layoutManager = LinearLayoutManager(requireContext()).apply { stackFromEnd = true }
+        vb.rvMessages.layoutManager = LinearLayoutManager(requireContext()).apply { stackFromEnd = false }
         vb.rvMessages.adapter = adapter
 
         vb.btnAttach.setOnClickListener { pickFile.launch("*/*") }
+
+        vb.btnRemoveAttachment.setOnClickListener { clearAttachment() }
 
         vb.btnSend.setOnClickListener {
             val details = vm.details.value
@@ -56,11 +64,14 @@ class EmployeeRequestDetailsFragment : Fragment(R.layout.fragment_employee_reque
             val text = vb.inputText.text?.toString()?.trim()
             val file = pendingFile
 
-            if ((text.isNullOrBlank()) && file == null) return@setOnClickListener toast("Enter a message or attach a file")
+            if ((text.isNullOrBlank()) && file == null) {
+                return@setOnClickListener toast("Enter a message or attach a file")
+            }
 
             vm.send(args.requestId, text, file)
+
             vb.inputText.setText("")
-            pendingFile = null
+            clearAttachment() // ✅ сбрасываем и UI и файл
         }
 
         vm.details.observe(viewLifecycleOwner) { d ->
@@ -72,15 +83,45 @@ class EmployeeRequestDetailsFragment : Fragment(R.layout.fragment_employee_reque
 
         vm.error.observe(viewLifecycleOwner) { if (!it.isNullOrBlank()) toast(it) }
 
+        // ✅ восстановление после поворота
+        val path = savedInstanceState?.getString("pending_path")
+        val name = savedInstanceState?.getString("pending_name")
+        if (!path.isNullOrBlank() && !name.isNullOrBlank()) {
+            val f = File(path)
+            if (f.exists()) {
+                pendingFile = f
+                pendingFileName = name
+                showAttachment(name)
+            }
+        }
+
         vm.load(args.requestId)
     }
 
-    private fun uriToTempFile(uri: Uri): File {
-        val f = File(requireContext().cacheDir, "req_${System.currentTimeMillis()}")
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("pending_path", pendingFile?.absolutePath)
+        outState.putString("pending_name", pendingFileName)
+    }
+
+    private fun uriToTempFile(uri: Uri, displayName: String): File {
+        val safeName = displayName.replace(Regex("[\\\\/:*?\"<>|]"), "_")
+        val f = File(requireContext().cacheDir, "req_${System.currentTimeMillis()}_$safeName")
         requireContext().contentResolver.openInputStream(uri).use { input ->
             FileOutputStream(f).use { out -> input?.copyTo(out) }
         }
         return f
+    }
+
+    private fun showAttachment(name: String) {
+        vb.tvAttachmentName.text = name
+        vb.attachmentCard.visibility = View.VISIBLE
+    }
+
+    private fun clearAttachment() {
+        pendingFile = null
+        pendingFileName = null
+        vb.attachmentCard.visibility = View.GONE
     }
 
     private fun toast(s: String) =
@@ -89,5 +130,16 @@ class EmployeeRequestDetailsFragment : Fragment(R.layout.fragment_employee_reque
     override fun onDestroyView() {
         super.onDestroyView()
         _vb = null
+    }
+}
+
+private fun ContentResolver.getDisplayName(uri: Uri): String? {
+    return try {
+        query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { c ->
+            val idx = c.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (idx != -1 && c.moveToFirst()) c.getString(idx) else null
+        }
+    } catch (_: Exception) {
+        null
     }
 }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.emotionsai.data.remote.RequestMessageDto
 import com.example.emotionsai.databinding.ItemRequestMessageBinding
 import com.example.emotionsai.util.formatServerDateTime
+import java.net.URLDecoder
 
 class RequestMessagesAdapter(
     private val onFileClick: (String) -> Unit
@@ -25,9 +26,10 @@ class RequestMessagesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
+        val vb = ItemRequestMessageBinding.inflate(inflater, parent, false)
         return when (viewType) {
-            VT_MINE -> MineVH(ItemRequestMessageBinding.inflate(inflater, parent, false), onFileClick)
-            else -> OtherVH(ItemRequestMessageBinding.inflate(inflater, parent, false), onFileClick)
+            VT_MINE -> MineVH(vb, onFileClick)
+            else -> OtherVH(vb, onFileClick)
         }
     }
 
@@ -49,13 +51,9 @@ class RequestMessagesAdapter(
             vb.tvTime.text = formatServerDateTime(m.created_at)
 
             vb.tvText.isVisible = !m.text.isNullOrBlank()
-            vb.tvText.text = m.text ?: ""
+            vb.tvText.text = m.text.orEmpty()
 
-            vb.tvFile.isVisible = !m.file.isNullOrBlank()
-            vb.tvFile.setOnClickListener {
-                val url = m.file ?: return@setOnClickListener
-                onFileClick(url)
-            }
+            bindFile(vb, m, onFileClick)
         }
     }
 
@@ -69,13 +67,9 @@ class RequestMessagesAdapter(
             vb.tvTime.text = formatServerDateTime(m.created_at)
 
             vb.tvText.isVisible = !m.text.isNullOrBlank()
-            vb.tvText.text = m.text ?: ""
+            vb.tvText.text = m.text.orEmpty()
 
-            vb.tvFile.isVisible = !m.file.isNullOrBlank()
-            vb.tvFile.setOnClickListener {
-                val url = m.file ?: return@setOnClickListener
-                onFileClick(url)
-            }
+            bindFile(vb, m, onFileClick)
         }
     }
 
@@ -86,4 +80,28 @@ class RequestMessagesAdapter(
         override fun areContentsTheSame(oldItem: RequestMessageDto, newItem: RequestMessageDto) =
             oldItem == newItem
     }
+}
+
+/** Вынесено, чтобы не дублировать код в двух VH */
+private fun bindFile(
+    vb: ItemRequestMessageBinding,
+    m: RequestMessageDto,
+    onFileClick: (String) -> Unit
+) {
+    val url = m.file
+    vb.tvFile.isVisible = !url.isNullOrBlank()
+    if (url.isNullOrBlank()) return
+
+    // ✅ показываем имя файла вместо "File"
+    vb.tvFile.text = fileNameFromUrl(url)
+
+    vb.tvFile.setOnClickListener { onFileClick(url) }
+}
+
+/** Берём последний сегмент URL и декодим (%20 -> пробел) */
+private fun fileNameFromUrl(url: String): String {
+    val noQuery = url.substringBefore("?").substringBefore("#")
+    val last = noQuery.substringAfterLast("/", missingDelimiterValue = noQuery)
+    val decoded = runCatching { URLDecoder.decode(last, "UTF-8") }.getOrDefault(last)
+    return decoded.ifBlank { "attachment" }
 }

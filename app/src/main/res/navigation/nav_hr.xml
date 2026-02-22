@@ -11,25 +11,25 @@
         android:id="@+id/createEventFragment"
         android:name="com.example.emotionsai.ui.hr.events.CreateEventFragment"
         android:label="Create Event">
-    <argument
-        android:name="eventId"
-        app:argType="integer"
-        android:defaultValue="0" />
+        <argument
+            android:name="eventId"
+            app:argType="integer"
+            android:defaultValue="0" />
 
-    <argument
-        android:name="eventTitle"
-        app:argType="string"
-        android:defaultValue="" />
+        <argument
+            android:name="eventTitle"
+            app:argType="string"
+            android:defaultValue="" />
 
-    <argument
-        android:name="eventStartsAt"
-        app:argType="string"
-        android:defaultValue="" />
+        <argument
+            android:name="eventStartsAt"
+            app:argType="string"
+            android:defaultValue="" />
 
-    <argument
-        android:name="eventEndsAt"
-        app:argType="string"
-        android:defaultValue="" />
+        <argument
+            android:name="eventEndsAt"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
     <fragment
         android:id="@+id/hrProfileFragment"

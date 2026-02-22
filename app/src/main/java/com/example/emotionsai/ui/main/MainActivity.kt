@@ -63,6 +63,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.faceLoginCameraFragment -> vb.bottomNav.visibility = View.GONE
                 else -> vb.bottomNav.visibility = View.VISIBLE
             }
+            when (destination.id) {
+                R.id.hrRequestDetailsFragment -> vb.bottomNav.menu.findItem(R.id.hrRequestsFragment).isChecked = true
+
+                // если Create/Edit event должен подсвечивать Events
+                R.id.createEventFragment -> vb.bottomNav.menu.findItem(R.id.hrEventsFragment).isChecked = true
+            }
         }
     }
 }
