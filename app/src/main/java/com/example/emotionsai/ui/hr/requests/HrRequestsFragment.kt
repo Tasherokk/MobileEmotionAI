@@ -24,9 +24,8 @@ class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
 
     private lateinit var adapter: HrRequestsAdapter
 
-    // ✅ Храним все элементы и фильтруем по табу
     private var allItems: List<HrRequestItemDto> = emptyList()
-    private var selectedStatus: String = "OPEN" // default
+    private var selectedStatus: String = "OPEN"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _vb = FragmentHrRequestsBinding.bind(view)
@@ -44,18 +43,21 @@ class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
 
         vb.swipeRefresh.setOnRefreshListener { vm.load() }
 
+        vb.btnSort.setOnClickListener {
+            vm.toggleSortOrder()
+        }
+
         vm.loading.observe(viewLifecycleOwner) {
             vb.progress.visibility = if (it) View.VISIBLE else View.GONE
             vb.swipeRefresh.isRefreshing = false
         }
 
         vm.error.observe(viewLifecycleOwner) {
-            vb.tvError.visibility = if (it.isNullOrBlank()) View.GONE else View.VISIBLE
-            vb.tvError.text = it ?: ""
-            if (!it.isNullOrBlank()) Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            if (!it.isNullOrBlank()) {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
         }
 
-        // ✅ получили список → сохранили allItems → применили фильтр
         vm.items.observe(viewLifecycleOwner) { list ->
             allItems = list ?: emptyList()
             applyFilter()
@@ -63,17 +65,14 @@ class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
     }
 
     private fun setupTabs() {
-        // Если tabsStatus нет в xml — добавь TabLayout с id tabsStatus
         val tabs = vb.tabsStatus
 
-        // ✅ чтобы не добавлять табы повторно при пересоздании view
         if (tabs.tabCount == 0) {
             tabs.addTab(tabs.newTab().setText("OPEN").setTag("OPEN"), true)
             tabs.addTab(tabs.newTab().setText("IN PROGRESS").setTag("IN_PROGRESS"))
             tabs.addTab(tabs.newTab().setText("CLOSED").setTag("CLOSED"))
         }
 
-        // на всякий: выставим selectedStatus по текущему выбранному табу
         selectedStatus = (tabs.getTabAt(tabs.selectedTabPosition)?.tag as? String) ?: "OPEN"
 
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -90,9 +89,11 @@ class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
     private fun applyFilter() {
         val filtered = allItems.filter { it.status == selectedStatus }
         adapter.submitList(filtered)
-
-        // если у тебя есть empty state — можешь тут включать/выключать
-        // vb.tvEmpty.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
+        
+        val isEmpty = filtered.isEmpty()
+        vb.stateContainer.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        vb.tvStateIcon.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        vb.tvStateHint.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 
     override fun onResume() {

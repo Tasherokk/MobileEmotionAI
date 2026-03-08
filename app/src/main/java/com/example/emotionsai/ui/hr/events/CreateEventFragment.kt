@@ -40,7 +40,6 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
     private val args: CreateEventFragmentArgs by navArgs()
     private val isEditMode: Boolean get() = args.eventId != 0
 
-    // ✅ чтобы не затирать выбор пользователя повторно
     private var appliedParticipants = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,28 +73,29 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
         profileVm.loadMe()
     }
 
-    /**
-     * ✅ Date + Time pickers
-     */
     private fun setupPickers() {
-        // ---- DATE pickers ----
-        val dpStart = MaterialDatePicker.Builder.datePicker().build()
         vb.inputStart.setOnClickListener {
+            val dpStart = MaterialDatePicker.Builder.datePicker()
+                .setTheme(R.style.ThemeOverlay_App_DatePicker)
+                .setTitleText("Select Start Date")
+                .build()
             dpStart.addOnPositiveButtonClickListener { millis ->
-                vb.inputStart.setText(formatDate(millis)) // yyyy-MM-dd
+                vb.inputStart.setText(formatDate(millis))
             }
             dpStart.show(parentFragmentManager, "startDate")
         }
 
-        val dpEnd = MaterialDatePicker.Builder.datePicker().build()
         vb.inputEnd.setOnClickListener {
+            val dpEnd = MaterialDatePicker.Builder.datePicker()
+                .setTheme(R.style.ThemeOverlay_App_DatePicker)
+                .setTitleText("Select End Date")
+                .build()
             dpEnd.addOnPositiveButtonClickListener { millis ->
-                vb.inputEnd.setText(formatDate(millis)) // yyyy-MM-dd
+                vb.inputEnd.setText(formatDate(millis))
             }
             dpEnd.show(parentFragmentManager, "endDate")
         }
 
-        // ---- TIME pickers ----
         vb.inputStartTime.setOnClickListener {
             showTimePicker { hh, mm ->
                 vb.inputStartTime.setText(String.format(Locale.US, "%02d:%02d", hh, mm))
@@ -126,10 +126,8 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
     private fun setupCreateBtn() {
         vb.btnCreate.setOnClickListener {
             val title = vb.inputTitle.text?.toString().orEmpty().trim()
-
             val startDate = vb.inputStart.text?.toString()
             val startTime = vb.inputStartTime.text?.toString()
-
             val endDate = vb.inputEnd.text?.toString()
             val endTime = vb.inputEndTime.text?.toString()
 
@@ -144,53 +142,31 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
                 return@setOnClickListener
             }
 
-            // ✅ собираем ISO с таймзоной устройства
             val startIso = buildIsoDateTimeOrNull(startDate, startTime)
             if (startIso == null) {
                 Toast.makeText(requireContext(), "Pick start date & time", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val endIso = buildIsoDateTimeOrNull(endDate, endTime) // может быть null
-
+            val endIso = buildIsoDateTimeOrNull(endDate, endTime)
             val parts = adapter.getSelected()
 
             if (isEditMode) {
-                vm.updateEvent(
-                    eventId = args.eventId,
-                    title = title,
-                    startIso = startIso,
-                    endIso = endIso,
-                    companyId = cid,
-                    participantIds = parts
-                )
+                vm.updateEvent(args.eventId, title, startIso, endIso, cid, parts)
             } else {
-                vm.createEvent(
-                    title = title,
-                    startIso = startIso,
-                    endIso = endIso,
-                    companyId = cid,
-                    participantIds = parts
-                )
+                vm.createEvent(title, startIso, endIso, cid, parts)
             }
         }
     }
 
     private fun setupObservers() {
-        vm.employees.observe(viewLifecycleOwner) { list ->
-            adapter.submitList(list)
-        }
-
+        vm.employees.observe(viewLifecycleOwner) { list -> adapter.submitList(list) }
         vm.eventDetails.observe(viewLifecycleOwner) { details ->
             if (details == null) return@observe
-
             vb.inputTitle.setText(details.title)
-
-            // ✅ распарсим серверный ISO и покажем дату+время
             val (sd, st) = parseServerToLocal(details.starts_at)
             vb.inputStart.setText(sd)
             vb.inputStartTime.setText(st)
-
             val endStr = details.ends_at
             if (endStr.isNullOrBlank()) {
                 vb.inputEnd.setText("")
@@ -200,59 +176,35 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
                 vb.inputEnd.setText(ed)
                 vb.inputEndTime.setText(et)
             }
-
             if (!appliedParticipants) {
                 adapter.setPreselected(details.participants)
                 appliedParticipants = true
             }
         }
-
-        vm.loading.observe(viewLifecycleOwner) {
-            vb.progress.visibility = if (it) View.VISIBLE else View.GONE
-        }
-
+        vm.loading.observe(viewLifecycleOwner) { vb.progress.visibility = if (it) View.VISIBLE else View.GONE }
         vm.success.observe(viewLifecycleOwner) { ok ->
             if (ok == true) {
                 vm.successHandled()
-                Toast.makeText(
-                    requireContext(),
-                    if (isEditMode) "Event updated!" else "Event created!",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(), if (isEditMode) "Event updated!" else "Event created!", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             }
         }
-
-        vm.error.observe(viewLifecycleOwner) {
-            if (!it.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-            }
-        }
+        vm.error.observe(viewLifecycleOwner) { if (!it.isNullOrEmpty()) Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
     }
 
-    /**
-     * ✅ date yyyy-MM-dd + time HH:mm -> ISO_OFFSET_DATE_TIME с TZ устройства: 2026-02-04T14:30:00+05:00
-     */
     private fun buildIsoDateTimeOrNull(date: String?, time: String?): String? {
         val d = date?.trim().orEmpty()
         if (d.isBlank()) return null
-
-        // если время пустое — можно считать ошибкой или дефолтить.
-        // Ты сказала "00:00 неправильно", поэтому требуем время хотя бы для start.
         val t = time?.trim().orEmpty()
         if (t.isBlank()) return null
-
-        val localDate = LocalDate.parse(d)          // yyyy-MM-dd
-        val localTime = LocalTime.parse(t)          // HH:mm
-        val zone = ZoneId.systemDefault()           // ✅ TZ устройства
-
-        val odt = ZonedDateTime.of(localDate, localTime, zone).toOffsetDateTime()
-        return odt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+        return try {
+            val localDate = LocalDate.parse(d)
+            val localTime = LocalTime.parse(t)
+            val odt = ZonedDateTime.of(localDate, localTime, ZoneId.systemDefault()).toOffsetDateTime()
+            odt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+        } catch (e: Exception) { null }
     }
 
-    /**
-     * ✅ сервер: 2026-02-14T14:45:15.123+05:00 -> ("2026-02-14", "14:45")
-     */
     private fun parseServerToLocal(server: String): Pair<String, String> {
         val odt = OffsetDateTime.parse(server)
         val date = odt.toLocalDate().toString()
@@ -260,13 +212,8 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
         return date to time
     }
 
-    /**
-     * millis -> yyyy-MM-dd
-     */
     private fun formatDate(millis: Long): String {
-        val zone = ZoneId.systemDefault()
-        val dt = java.time.Instant.ofEpochMilli(millis).atZone(zone).toLocalDate()
-        return dt.toString() // yyyy-MM-dd
+        return java.time.Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate().toString()
     }
 
     override fun onDestroyView() {

@@ -19,17 +19,32 @@ class EmployeeRequestsViewModel(
     private val _items = MutableLiveData<List<EmployeeRequestItemDto>>(emptyList())
     val items: LiveData<List<EmployeeRequestItemDto>> = _items
 
+    private var isDescending = true
+
     fun load() {
         _loading.value = true
         viewModelScope.launch {
             when (val res = repo.loadMyEmployeeRequests()) {
                 is Result.Ok -> {
-                    _items.value = res.value
+                    _items.value = sortItems(res.value)
                     _error.value = null
                 }
                 is Result.Err -> _error.value = res.message
             }
             _loading.value = false
+        }
+    }
+
+    fun toggleSortOrder() {
+        isDescending = !isDescending
+        _items.value = sortItems(_items.value ?: emptyList())
+    }
+
+    private fun sortItems(list: List<EmployeeRequestItemDto>): List<EmployeeRequestItemDto> {
+        return if (isDescending) {
+            list.sortedByDescending { it.created_at }
+        } else {
+            list.sortedBy { it.created_at }
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.example.emotionsai.ui.hr.events
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +11,6 @@ import com.example.emotionsai.R
 import com.example.emotionsai.data.remote.HrEventDto
 import com.example.emotionsai.databinding.ItemHrEventBinding
 import com.example.emotionsai.util.formatServerDateTime
-import androidx.core.content.ContextCompat
 
 class HrEventsAdapter(
     private val isActive: (HrEventDto) -> Boolean,
@@ -29,8 +30,6 @@ class HrEventsAdapter(
         return VH(vb)
     }
 
-
-
     override fun onBindViewHolder(h: VH, position: Int) {
         val e = getItem(position)
         val active = isActive(e)
@@ -39,32 +38,33 @@ class HrEventsAdapter(
         val endDate = formatServerDateTime(e.ends_at)
 
         h.vb.tvTitle.text = e.title
+        h.vb.tvCompany.text = e.company_name
         h.vb.tvDates.text = "${startDate} — ${endDate ?: "no end"}"
-        h.vb.tvParticipants.text = "Participants: ${e.participants_count}"
-        h.vb.badgeActive.text = if (active) "ACTIVE" else "PAST"
+        h.vb.tvParticipants.text = "${e.participants_count} participants"
 
         val ctx = h.itemView.context
+        
+        // Update Activeness UI
+        if (active) {
+            h.vb.badgeActive.text = "ACTIVE"
+            h.vb.badgeActive.setTextColor(ContextCompat.getColor(ctx, R.color.primary))
+            h.vb.badgeActive.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(ctx, R.color.bottom_nav_indicator))
+            h.vb.cardView.strokeColor = ContextCompat.getColor(ctx, R.color.primary)
+            h.vb.cardView.alpha = 1.0f
+        } else {
+            h.vb.badgeActive.text = "PAST"
+            h.vb.badgeActive.setTextColor(ContextCompat.getColor(ctx, R.color.text_secondary))
+            h.vb.badgeActive.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(ctx, R.color.stroke_soft))
+            h.vb.cardView.strokeColor = ContextCompat.getColor(ctx, R.color.stroke_soft)
+            h.vb.cardView.alpha = 0.7f
+        }
 
-        val enabledEditColor = ContextCompat.getColor(ctx, R.color.primary)
-        val enabledDeleteColor = ContextCompat.getColor(ctx, R.color.error)
-        val disabledColor = ContextCompat.getColor(ctx, R.color.text_secondary) // серый
-
-        // --- Edit ---
+        // Buttons state
         h.vb.btnEdit.isEnabled = active
-        h.vb.btnEdit.setTextColor(if (active) enabledEditColor else disabledColor)
-        h.vb.btnEdit.strokeColor = android.content.res.ColorStateList.valueOf(
-            if (active) enabledEditColor else disabledColor
-        )
-
-        // --- Delete ---
         h.vb.btnDelete.isEnabled = active
-        h.vb.btnDelete.setTextColor(if (active) enabledDeleteColor else disabledColor)
-        h.vb.btnDelete.strokeColor = android.content.res.ColorStateList.valueOf(
-            if (active) enabledDeleteColor else disabledColor
-        )
-
-        h.vb.btnEdit.setOnClickListener { if (active) onEdit(e) }
-        h.vb.btnDelete.setOnClickListener { if (active) onDelete(e) }
+        
+        // Click Listeners
+        h.vb.btnEdit.setOnClickListener { onEdit(e) }
+        h.vb.btnDelete.setOnClickListener { onDelete(e) }
     }
-
 }

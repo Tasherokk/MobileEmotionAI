@@ -19,17 +19,32 @@ class HrRequestsViewModel(
     private val _items = MutableLiveData<List<HrRequestItemDto>>(emptyList())
     val items: LiveData<List<HrRequestItemDto>> = _items
 
+    private var isDescending = true
+
     fun load() {
         _loading.value = true
         viewModelScope.launch {
             when (val res = repo.loadHrRequests()) {
                 is Result.Ok -> {
-                    _items.value = res.value
+                    _items.value = sortItems(res.value)
                     _error.value = null
                 }
                 is Result.Err -> _error.value = res.message
             }
             _loading.value = false
+        }
+    }
+
+    fun toggleSortOrder() {
+        isDescending = !isDescending
+        _items.value = sortItems(_items.value ?: emptyList())
+    }
+
+    private fun sortItems(list: List<HrRequestItemDto>): List<HrRequestItemDto> {
+        return if (isDescending) {
+            list.sortedByDescending { it.created_at }
+        } else {
+            list.sortedBy { it.created_at }
         }
     }
 }

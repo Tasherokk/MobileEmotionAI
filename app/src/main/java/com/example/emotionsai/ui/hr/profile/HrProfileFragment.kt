@@ -6,7 +6,6 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.example.emotionsai.R
 import com.example.emotionsai.databinding.FragmentHrProfileBinding
 import com.example.emotionsai.di.ServiceLocator
@@ -20,14 +19,13 @@ class HrProfileFragment : Fragment(R.layout.fragment_hr_profile) {
     private val vm: HrProfileViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         _vb = FragmentHrProfileBinding.bind(view)
 
         val settings = ServiceLocator.settingsStorage(requireContext())
 
-        // ✅ 1) выставляем сохранённое состояние
-        vb.swFaceLogin.isChecked = settings.isFaceIdEnabled()  // <- имя метода подстрой под свой storage
+        vb.swFaceLogin.isChecked = settings.isFaceIdEnabled()
 
-        // ✅ 2) сохраняем новое состояние
         vb.swFaceLogin.setOnCheckedChangeListener { _, isChecked ->
             settings.setFaceIdEnabled(isChecked)
         }
@@ -36,20 +34,16 @@ class HrProfileFragment : Fragment(R.layout.fragment_hr_profile) {
 
         vm.me.observe(viewLifecycleOwner) { me ->
             me ?: return@observe
-            vb.tvUsername.text = me.name.ifBlank { me.username }
+            vb.tvUsername.text = "@${me.username}"
             vb.tvHello.text = me.name.ifBlank { me.username }
-            vb.tvRole.text = "HR Manager"
-            vb.tvCompanyName.text = me.company_name ?: "—"
-            vb.tvDepartmentName.text = me.department_name ?: "—"
         }
 
         vm.error.observe(viewLifecycleOwner) {
-            vb.tvError.text = it
-            vb.tvError.visibility = if (it.isNullOrBlank()) View.GONE else View.VISIBLE
+            // Error handling if needed, tvError removed in new UI
         }
 
         vm.loading.observe(viewLifecycleOwner) {
-            vb.progress.visibility = if (it) View.VISIBLE else View.GONE
+            vb.loadingOverlay.visibility = if (it) View.VISIBLE else View.GONE
         }
 
         vm.forceLogout.observe(viewLifecycleOwner) { go ->

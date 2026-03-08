@@ -35,7 +35,7 @@ class HrRequestsAdapter(
             vb.tvStatus.text = item.status
             vb.tvCreatedAt.text = formatServerDateTime(item.created_at)
             vb.tvLastMessage.text = formatServerDateTime(item.last_message_at) ?: "—"
-            vb.tvMessagesCount.text = item.messages_count.toString()
+            vb.tvMessagesCount.text = "${item.messages_count} messages"
 
             vb.root.setOnClickListener { onClick(item) }
         }
