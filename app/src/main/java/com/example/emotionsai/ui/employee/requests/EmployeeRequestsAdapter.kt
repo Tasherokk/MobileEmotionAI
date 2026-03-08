@@ -2,7 +2,6 @@ package com.example.emotionsai.ui.employee.requests
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -32,15 +31,15 @@ class EmployeeRequestsAdapter(
 
         fun bind(item: EmployeeRequestItemDto) {
             vb.tvTitle.text = item.type_name
-            vb.tvSubtitle.text = "HR: ${item.hr_name} (@${item.hr_username})"
             vb.tvStatus.text = item.status
-
-            vb.tvCreatedAt.text = formatServerDateTime(item.created_at)
-            vb.tvLastMessage.text = formatServerDateTime(item.last_message_at) ?: "—"
-            vb.tvMessagesCount.text = item.messages_count.toString()
-
-            vb.tvClosedAt.isVisible = !item.closed_at.isNullOrBlank()
-            vb.tvClosedAt.text = formatServerDateTime(item.closed_at) ?: ""
+            vb.tvDescription.text = "HR: ${item.hr_name} (@${item.hr_username})"
+            vb.tvDate.text = formatServerDateTime(item.created_at) ?: ""
+            vb.tvMessagesCount.text = "${item.messages_count} messages"
+            vb.tvLastMessage.text = if (item.last_message_at != null) {
+                "Updated: ${formatServerDateTime(item.last_message_at)}"
+            } else {
+                "No messages"
+            }
 
             vb.root.setOnClickListener { onClick(item) }
         }

@@ -1,11 +1,13 @@
 package com.example.emotionsai.ui.employee.camera
 
 import android.Manifest
+import android.animation.ValueAnimator
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -36,6 +38,7 @@ class CameraFragment : Fragment() {
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
     private val args: CameraFragmentArgs by navArgs()
+    private var scannerAnimator: ValueAnimator? = null
 
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -65,6 +68,24 @@ class CameraFragment : Fragment() {
         setupObservers()
         setupClickListeners()
         checkCameraPermission()
+        startScannerAnimation()
+    }
+
+    private fun startScannerAnimation() {
+        binding.viewScanner.post {
+            val parentHeight = binding.root.height.toFloat()
+            scannerAnimator = ValueAnimator.ofFloat(0f, parentHeight).apply {
+                duration = 3000
+                repeatMode = ValueAnimator.REVERSE
+                repeatCount = ValueAnimator.INFINITE
+                interpolator = LinearInterpolator()
+                addUpdateListener { animator ->
+                    val value = animator.animatedValue as Float
+                    binding.viewScanner.translationY = value
+                }
+                start()
+            }
+        }
     }
 
     private fun checkCameraPermission() {
@@ -130,21 +151,15 @@ class CameraFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is CameraUiState.Idle -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.loadingOverlay.visibility = View.GONE
-                    binding.tvLoading.visibility = View.GONE
+                    binding.loadingLayout.visibility = View.GONE
                     binding.btnCapture.isEnabled = true
                 }
                 is CameraUiState.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.loadingOverlay.visibility = View.VISIBLE
-                    binding.tvLoading.visibility = View.VISIBLE
+                    binding.loadingLayout.visibility = View.VISIBLE
                     binding.btnCapture.isEnabled = false
                 }
                 is CameraUiState.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.loadingOverlay.visibility = View.GONE
-                    binding.tvLoading.visibility = View.GONE
+                    binding.loadingLayout.visibility = View.GONE
 
                     // 1) сообщаем назад, что фидбэк по ивенту отправлен (см. пункт 3)
                     findNavController().previousBackStackEntry
@@ -159,9 +174,7 @@ class CameraFragment : Fragment() {
                 }
 
                 is CameraUiState.Error -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.loadingOverlay.visibility = View.GONE
-                    binding.tvLoading.visibility = View.GONE
+                    binding.loadingLayout.visibility = View.GONE
                     binding.btnCapture.isEnabled = true
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
                 }
@@ -197,6 +210,7 @@ class CameraFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        scannerAnimator?.cancel()
         cameraExecutor.shutdown()
         _binding = null
     }

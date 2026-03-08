@@ -5,397 +5,200 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_surface">
+    android:background="@color/background">
 
-    <!-- Scrollable content -->
     <androidx.core.widget.NestedScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        android:clipToPadding="false"
-        android:paddingBottom="24dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/layoutContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="24dp">
 
-            <!-- HEADER CARD -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HR Dashboard"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/on_surface"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- HR Header Card -->
             <com.google.android.material.card.MaterialCardView
+                style="@style/ModernCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="6dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/stroke_soft"
-                app:cardBackgroundColor="@color/card_primary">
+                android:layout_marginBottom="24dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="20dp">
+                    android:padding="24dp">
 
-                    <!-- Avatar -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/materialCardView"
-                        android:layout_width="84dp"
-                        android:layout_height="84dp"
-                        app:cardBackgroundColor="@color/white"
-                        app:cardCornerRadius="42dp"
-                        app:cardElevation="0dp"
+                    <FrameLayout
+                        android:id="@+id/avatarContainer"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/tvAvatar"
+                        <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/ic_user2"
-                            android:gravity="center"
-                            android:textColor="@color/text_primary"
-                            android:textSize="44sp" />
-                    </com.google.android.material.card.MaterialCardView>
+                            android:background="@drawable/bg_circle_pulse"
+                            android:alpha="0.1"
+                            android:backgroundTint="@color/secondary"/>
 
-                    <!-- Name -->
+                        <ImageView
+                            android:id="@+id/ivAvatar"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_person"
+                            app:tint="@color/secondary"/>
+                    </FrameLayout>
+
                     <TextView
                         android:id="@+id/tvHello"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="User Name"
-                        android:textColor="@color/text_primary"
-                        android:textSize="20sp"
+                        android:layout_marginStart="20dp"
+                        android:text="HR Manager"
+                        android:textColor="@color/on_surface"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:layout_marginLeft="24sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/materialCardView"
-                        app:layout_constraintTop_toTopOf="@id/tvAvatar"
-                        tools:ignore="NotSibling" />
+                        app:layout_constraintStart_toEndOf="@id/avatarContainer"
+                        app:layout_constraintTop_toTopOf="@id/avatarContainer"
+                        app:layout_constraintBottom_toTopOf="@id/tvUsername"/>
 
-                    <!-- Username -->
                     <TextView
                         android:id="@+id/tvUsername"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@username"
+                        android:text="@hr_admin"
+                        android:textColor="@color/on_surface_variant"
                         android:textSize="14sp"
-                        android:textColor="@color/text_on_primary_muted"
-                        app:layout_constraintTop_toBottomOf="@id/tvHello"
-                        app:layout_constraintStart_toStartOf="@id/tvHello"
+                        app:layout_constraintBottom_toBottomOf="@id/avatarContainer"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="4dp"/>
-
-                    <!-- Role chip -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:cardCornerRadius="18dp"
-                        app:cardElevation="0dp"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="@color/stroke_soft"
-                        app:cardBackgroundColor="@color/card_surface"
-                        app:layout_constraintTop_toBottomOf="@id/tvUsername"
                         app:layout_constraintStart_toStartOf="@id/tvHello"
-                        android:layout_marginTop="12dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="12dp"
-                            android:paddingTop="8dp"
-                            android:paddingEnd="12dp"
-                            android:paddingBottom="8dp">
-
-                            <TextView
-                                android:id="@+id/tvRoleEmoji"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/role"
-                                android:textSize="16sp" />
-
-                            <TextView
-                                android:id="@+id/tvRole"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="Employee"
-                                android:textColor="@color/primary"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                        app:layout_constraintTop_toBottomOf="@id/tvHello"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- SECTION TITLE -->
+            <!-- Admin Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Organization"
+                android:text="Administrative"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_secondary"
-                android:layout_marginTop="18dp"
-                android:layout_marginBottom="10dp"/>
+                android:textColor="@color/secondary"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="12dp"/>
 
-            <!-- Company -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardCompany"
+                style="@style/ModernCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/stroke_soft"
-                app:cardBackgroundColor="@color/card_surface">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:id="@+id/ivCompanyIcon"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_company"
-                        android:contentDescription="@null"
-                        app:tint="@color/primary"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                    <TextView
-                        android:id="@+id/tvCompanyLabel"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Company"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        app:layout_constraintStart_toEndOf="@id/ivCompanyIcon"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginStart="12dp"/>
-
-                    <TextView
-                        android:id="@+id/tvCompanyName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Company Name"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary"
-                        app:layout_constraintStart_toStartOf="@id/tvCompanyLabel"
-                        app:layout_constraintTop_toBottomOf="@id/tvCompanyLabel"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="4dp"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Department -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardDepartment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/stroke_soft"
-                app:cardBackgroundColor="@color/card_surface">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:id="@+id/ivDepartmentIcon"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_department"
-                        android:contentDescription="@null"
-                        app:tint="@color/primary"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                    <TextView
-                        android:id="@+id/tvDepartmentLabel"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Department"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        app:layout_constraintStart_toEndOf="@id/ivDepartmentIcon"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginStart="12dp"/>
-
-                    <TextView
-                        android:id="@+id/tvDepartmentName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Department Name"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary"
-                        app:layout_constraintStart_toStartOf="@id/tvDepartmentLabel"
-                        app:layout_constraintTop_toBottomOf="@id/tvDepartmentLabel"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="4dp"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Face ID Switch Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/stroke_soft"
-                app:cardBackgroundColor="@color/card_surface">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:id="@+id/ivFaceIcon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_face"
-                        android:contentDescription="@null"
-                        app:tint="@color/primary"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/swFaceLogin"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Use Face ID to log in"
-                        android:textColor="@color/text_primary"
-                        app:layout_constraintStart_toEndOf="@id/ivFaceIcon"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:layout_marginStart="12dp"
-                        app:thumbTint="@color/primary"
-                        app:trackTint="@color/text_on_primary_muted"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Error -->
-            <TextView
-                android:id="@+id/tvError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@color/error"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:layout_marginTop="12dp"
-                android:visibility="gone" />
-
-            <!-- LOGOUT CARD -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                app:cardCornerRadius="18dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/error"
-                app:cardBackgroundColor="@color/card_surface">
+                android:layout_marginBottom="32dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="8dp">
 
-                    <TextView
-                        android:id="@+id/tvDangerTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Danger zone"
-                        android:textStyle="bold"
-                        android:textSize="14sp"
-                        android:textColor="@color/error"/>
-
-                    <TextView
-                        android:id="@+id/tvDangerDesc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Logging out will end your current session."
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginTop="6dp"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnLogout"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:layout_marginTop="14dp"
-                        android:text="Logout"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:backgroundTint="@color/error"
-                        app:cornerRadius="14dp"
-                        app:icon="@drawable/ic_login"
-                        app:iconGravity="textStart"
-                        app:iconPadding="10dp"/>
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_business"
+                            app:tint="@color/on_surface_variant"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="16dp"
+                            android:text="Company Management"
+                            android:textStyle="bold"
+                            android:textColor="@color/on_surface"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/stroke_soft" android:layout_marginHorizontal="16dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_face"
+                            app:tint="@color/on_surface_variant"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="16dp"
+                            android:text="Biometric Authentication"
+                            android:textStyle="bold"
+                            android:textColor="@color/on_surface"/>
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/swFaceLogin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Logout -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Sign Out"
+                android:textColor="@color/error"
+                app:icon="@drawable/ic_logout"
+                app:iconTint="@color/error"
+                app:cornerRadius="16dp"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Loading overlay (optional but safe) -->
-    <View
+    <!-- Corrected Loading Overlay -->
+    <FrameLayout
         android:id="@+id/loadingOverlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/text_secondary"
         android:visibility="gone"
+        android:background="#80000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <ProgressBar
-        android:id="@+id/progressOverlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- ORIGINAL progress id kept (you already have it) -->
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/secondary"/>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

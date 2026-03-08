@@ -90,6 +90,9 @@ dependencies {
     implementation libs.mpandroidchart
     implementation libs.material
     implementation(libs.androidx.compose.material.icons.extended)
+    
+    // Splash Screen API
+    implementation "androidx.core:core-splashscreen:1.0.1"
 
     configurations.all {
         resolutionStrategy {

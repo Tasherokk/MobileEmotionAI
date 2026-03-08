@@ -4,13 +4,13 @@ import androidx.compose.ui.graphics.Color
 
 object EmotionColors {
     fun color(emotion: String): Color = when (emotion.lowercase()) {
-        "happy" -> Color(0xFF2E7D32)      // спокойный зелёный
-        "neutral" -> Color(0xFF607D8B)    // серо-синий
-        "sad" -> Color(0xFF1565C0)        // синий
-        "angry" -> Color(0xFFC62828)      // красный
-        "disgust" -> Color(0xFF6A1B9A)    // фиолетовый
-        "fear" -> Color(0xFF5D4037)       // коричневый
-        "surprise" -> Color(0xFFEF6C00)  // оранжевый
-        else -> Color(0xFF455A64)
+        "happy" -> Color(0xFF10B981)      // Emerald
+        "neutral" -> Color(0xFF6366F1)    // Indigo
+        "sad" -> Color(0xFF3B82F6)        // Blue
+        "angry" -> Color(0xFFEF4444)      // Red
+        "disgust" -> Color(0xFF8B5CF6)    // Violet
+        "fear" -> Color(0xFF1E293B)       // Slate
+        "surprise" -> Color(0xFFF59E0B)   // Amber
+        else -> Color(0xFF94A3B8)
     }
 }

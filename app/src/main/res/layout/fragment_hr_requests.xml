@@ -2,113 +2,110 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_surface">
+    android:background="@color/background">
 
-    <!-- TABS -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="Employee Requests"
+        android:textColor="@color/on_surface"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnSort"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_sort"
+        app:tint="@color/on_surface_variant"
+        app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitle" />
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabsStatus"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="6dp"
-        android:background="@color/card_primary"
-        app:tabRippleColor="@color/stroke_soft"
-        app:tabMode="fixed"
-        app:tabGravity="fill"
-        app:tabIndicatorFullWidth="false"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
         app:tabIndicatorColor="@color/primary"
-        app:tabSelectedTextColor="@color/text_primary"
-        app:tabTextColor="@color/text_secondary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:tabIndicatorHeight="3dp"
+        app:tabRippleColor="@color/bottom_nav_indicator"
+        app:tabSelectedTextColor="@color/primary"
+        app:tabTextColor="@color/on_surface_variant"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-    <!-- LIST AREA -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/bg_surface"
-        app:layout_constraintTop_toBottomOf="@id/tabsStatus"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/tabsStatus">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- LIST -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRequests"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="18dp"
                 android:clipToPadding="false"
-                android:scrollbars="none"
-                android:overScrollMode="never" />
+                android:paddingTop="8dp"
+                android:paddingBottom="24dp"
+                tools:listitem="@layout/item_hr_request" />
 
-            <!-- LOADING -->
             <ProgressBar
                 android:id="@+id/progress"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:indeterminateTint="@color/primary"
                 android:visibility="gone" />
 
-            <!-- EMPTY / ERROR STATE -->
             <LinearLayout
                 android:id="@+id/stateContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="24dp"
                 android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tvStateIcon"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:gravity="center"
-                    android:text="⚠️"
-                    android:textSize="28sp"
-                    android:background="@color/card_surface"
-                    android:textColor="@color/text_primary"
-                    android:padding="10dp" />
+                    android:text="📬"
+                    android:textSize="40sp"
+                    android:alpha="0.3"/>
 
                 <TextView
                     android:id="@+id/tvError"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:gravity="center"
-                    android:text="Ошибка"
+                    android:layout_marginTop="16dp"
                     android:textColor="@color/error"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:visibility="gone" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tvStateHint"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:gravity="center"
-                    android:text="Потяни вниз, чтобы обновить."
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp"
-                    android:visibility="gone" />
+                    android:layout_marginTop="8dp"
+                    android:text="Pull down to refresh"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="13sp" />
             </LinearLayout>
 
         </FrameLayout>
