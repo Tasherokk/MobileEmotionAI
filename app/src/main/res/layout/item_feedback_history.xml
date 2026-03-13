@@ -2,17 +2,18 @@
 <com.google.android.material.card.MaterialCardView 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ModernCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="12dp">
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginBottom="6dp"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="14dp"
         android:gravity="center_vertical">
 
         <!-- Emotion Emoji -->
@@ -21,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="😊"
-            android:textSize="40sp" />
+            android:textSize="30sp" />
 
         <!-- Info Section -->
         <LinearLayout
@@ -33,29 +34,27 @@
 
             <TextView
                 android:id="@+id/tvEmotionName"
+                style="@style/TextAppearance.EmotionsAi.CardTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="HAPPY"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/on_surface" />
 
             <TextView
                 android:id="@+id/tvDate"
+                style="@style/TextAppearance.EmotionsAi.CaptionMuted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Jan 07, 10:23"
-                android:textSize="12sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
                 android:layout_marginTop="2dp" />
 
             <TextView
                 android:id="@+id/tvEvent"
+                style="@style/TextAppearance.EmotionsAi.CaptionMuted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="📌 Weekly Team Sync"
-                android:textSize="12sp"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/primary"
                 android:layout_marginTop="4dp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -66,14 +65,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="87%"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorPrimary"
-            android:background="?attr/colorPrimaryContainer"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
+            android:textColor="@color/primary"
+            android:background="@drawable/bg_status_badge"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:layout_marginStart="8dp" />
 
     </LinearLayout>

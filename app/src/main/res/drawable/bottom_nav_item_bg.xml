@@ -7,9 +7,9 @@
             android:insetBottom="6dp">
             <shape>
                 <solid android:color="@color/bottom_nav_indicator"/>
-                <corners android:radius="16dp"/>
+                <corners android:radius="10dp"/>
                 <size android:height="24dp"/>
-                <size android:width="48dp"/>
+                <size android:width="40dp"/>
             </shape>
         </inset>
     </item>

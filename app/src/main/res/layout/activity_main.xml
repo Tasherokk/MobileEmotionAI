@@ -21,20 +21,18 @@
         android:id="@+id/bottomNav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-
         android:background="@drawable/bg_bottom_nav"
-        android:backgroundTint="@color/white"
-
-
-        app:itemIconTint="@color/primary"
-        app:itemTextColor="@color/primary"
-        app:itemRippleColor="@color/text_secondary"
-
+        android:backgroundTint="@color/card_primary"
+        app:itemBackground="@drawable/bottom_nav_item_bg"
+        app:itemIconTint="@color/bottom_nav_item_tint"
+        app:itemTextColor="@color/bottom_nav_item_tint"
+        app:itemRippleColor="@color/bottom_nav_ripple"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_employee"/>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

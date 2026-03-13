@@ -18,25 +18,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="20dp">
 
             <TextView
                 android:id="@+id/tvTitle"
+                style="@style/TextAppearance.EmotionsAi.ScreenTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New Request"
-                android:textColor="@color/on_surface"
-                android:textSize="28sp"
-                android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
+                style="@style/TextAppearance.EmotionsAi.BodyMuted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fill in the details below to reach out to HR."
-                android:textColor="@color/on_surface_variant"
-                android:textSize="14sp"
-                android:layout_marginBottom="32dp"/>
+                android:layout_marginBottom="24dp"/>
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/ModernCard"
@@ -47,17 +44,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="16dp">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        style="@style/Widget.EmotionsAi.TextInputLayout.ExposedDropdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Request Type"
-                        app:boxCornerRadiusTopStart="16dp"
-                        app:boxCornerRadiusTopEnd="16dp"
-                        app:boxCornerRadiusBottomStart="16dp"
-                        app:boxCornerRadiusBottomEnd="16dp">
+                        android:hint="Request Type">
 
                         <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/dropType"
@@ -67,15 +60,11 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        style="@style/Widget.EmotionsAi.TextInputLayout.ExposedDropdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:hint="Select HR Manager"
-                        app:boxCornerRadiusTopStart="16dp"
-                        app:boxCornerRadiusTopEnd="16dp"
-                        app:boxCornerRadiusBottomStart="16dp"
-                        app:boxCornerRadiusBottomEnd="16dp">
+                        android:layout_marginTop="12dp"
+                        android:hint="Select HR Manager">
 
                         <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/dropHr"
@@ -85,15 +74,11 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.EmotionsAi.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:hint="Additional Comment"
-                        app:boxCornerRadiusTopStart="16dp"
-                        app:boxCornerRadiusTopEnd="16dp"
-                        app:boxCornerRadiusBottomStart="16dp"
-                        app:boxCornerRadiusBottomEnd="16dp">
+                        android:layout_marginTop="12dp"
+                        android:hint="Additional Comment">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/inputComment"
@@ -109,12 +94,11 @@
 
             <TextView
                 android:id="@+id/tvHint"
+                style="@style/TextAppearance.EmotionsAi.CaptionMuted"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="14dp"
                 android:text="Your request will be visible to the selected HR manager only."
-                android:textColor="@color/on_surface_variant"
-                android:textSize="12sp"
                 android:gravity="center" />
 
         </LinearLayout>
@@ -135,7 +119,7 @@
         style="@style/ModernButton"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_margin="24dp"
+        android:layout_margin="20dp"
         android:text="Submit Request"
         app:layout_constraintBottom_toBottomOf="parent" />
 

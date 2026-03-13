@@ -3,40 +3,52 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Modern AI Palette -->
-    <color name="primary">#6366F1</color>
-    <color name="primary_variant">#4F46E5</color>
+    <!-- Big Tech Enterprise Palette -->
+    <color name="primary">#0B57D0</color>
+    <color name="primary_variant">#0842A0</color>
     <color name="on_primary">#FFFFFF</color>
 
-    <color name="secondary">#EC4899</color>
-    <color name="secondary_variant">#DB2777</color>
+    <color name="secondary">#475467</color>
+    <color name="secondary_variant">#344054</color>
     <color name="on_secondary">#FFFFFF</color>
 
-    <color name="background">#F8FAFC</color>
+    <color name="background">#F5F7FA</color>
     <color name="surface">#FFFFFF</color>
-    <color name="on_surface">#0F172A</color>
-    <color name="on_surface_variant">#475569</color>
+    <color name="on_surface">#101828</color>
+    <color name="on_surface_variant">#475467</color>
 
-    <color name="error">#EF4444</color>
-    <color name="success">#10B981</color>
-    <color name="warning">#F59E0B</color>
+    <color name="error">#C83532</color>
+    <color name="success">#067647</color>
+    <color name="warning">#B54708</color>
 
     <!-- UI Components -->
-    <color name="stroke_soft">#E2E8F0</color>
-    <color name="card_shadow">#0F172A1A</color>
-    <color name="bottom_nav_indicator">#1A6366F1</color>
+    <color name="stroke_soft">#D0D7E2</color>
+    <color name="stroke_medium">#B8C2D1</color>
+    <color name="card_shadow">#0B122014</color>
+    <color name="bottom_nav_indicator">#E8F0FE</color>
     
-    <!-- Emotion specific (AI look) -->
-    <color name="ai_glow">#818CF8</color>
-    <color name="ai_pulse">#C7D2FE</color>
+    <!-- Emotion specific (professionalized) -->
+    <color name="ai_glow">#99B2FF</color>
+    <color name="ai_pulse">#EEF4FF</color>
+
+    <!-- Overlays & scrims -->
+    <color name="overlay_surface_dark">#E60B1220</color>
+    <color name="text_on_dark_muted">#D0D7E2</color>
+    <color name="scrim_medium">#80101828</color>
+    <color name="scrim_strong">#99101828</color>
+
+    <!-- Bottom nav state colors -->
+    <color name="nav_item_active">#0B57D0</color>
+    <color name="nav_item_inactive">#667085</color>
+    <color name="nav_ripple">#CCD7E4FF</color>
 
     <!-- Legacy compatibility -->
-    <color name="bg_surface">#F8FAFC</color>
-    <color name="text_primary">#0F172A</color>
-    <color name="text_secondary">#475569</color>
-    <color name="text_hint">#94A3B8</color>
+    <color name="bg_surface">#F5F7FA</color>
+    <color name="text_primary">#101828</color>
+    <color name="text_secondary">#475467</color>
+    <color name="text_hint">#98A2B3</color>
     <color name="card_primary">#FFFFFF</color>
-    <color name="card_surface">#F1F5F9</color>
-    <color name="link">#3B82F6</color>
-    <color name="text_on_primary_muted">#797676</color>
+    <color name="card_surface">#F8FAFC</color>
+    <color name="link">#0B57D0</color>
+    <color name="text_on_primary_muted">#D6E4FF</color>
 </resources>
