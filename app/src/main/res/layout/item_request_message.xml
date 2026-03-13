@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="12dp"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginTop="6dp"
-    android:background="@drawable/bg_dropdown_popup_simple">
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginTop="8dp"
+    android:paddingBottom="10dp"
+    android:background="@drawable/bg_bottom_nav"
+    app:cardCornerRadius="24dp">
 
     <TextView
         android:id="@+id/tvSender"
@@ -17,7 +20,6 @@
         android:textStyle="bold"
         android:text="Sender"
         android:textColor="@color/text_primary"
-        android:textSize="13sp"
         android:maxLines="1"
         android:ellipsize="end" />
 
@@ -27,7 +29,6 @@
         android:layout_height="wrap_content"
         android:text="Text"
         android:textColor="@color/text_secondary"
-        android:textSize="13sp"
         android:layout_marginTop="4dp"
         android:maxLines="10"
         android:ellipsize="end" />
@@ -38,7 +39,6 @@
         android:layout_height="wrap_content"
         android:text="File"
         android:textColor="@color/link"
-        android:textSize="12sp"
         android:layout_marginTop="6dp"
         android:visibility="gone" />
 
@@ -46,9 +46,9 @@
         android:id="@+id/tvTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="11sp"
+        android:textSize="12sp"
         android:text="time"
         android:textColor="@color/text_hint"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:gravity="end" />
 </LinearLayout>

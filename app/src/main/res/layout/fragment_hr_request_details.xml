@@ -9,10 +9,14 @@
     <!-- Header -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/headerCard"
-        style="@style/ModernCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="12dp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/stroke_soft"
+        app:cardBackgroundColor="@color/card_primary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -21,14 +25,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="14dp">
 
             <TextView
                 android:id="@+id/tvHeader"
-                style="@style/TextAppearance.EmotionsAi.CardTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Request"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary"
                 android:maxLines="2"
                 android:ellipsize="end"/>
 
@@ -72,8 +78,8 @@
         android:id="@+id/rvMessages"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:clipToPadding="false"
@@ -85,10 +91,14 @@
     <!-- Composer -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/composerCard"
-        style="@style/ModernCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="12dp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/stroke_soft"
+        app:cardBackgroundColor="@color/card_primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -98,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="10dp">
 
             <!-- ✅ Attachment preview (скрыто пока файл не выбран) -->
             <com.google.android.material.card.MaterialCardView
@@ -143,7 +153,7 @@
                         android:id="@+id/btnRemoveAttachment"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
-                        android:background="@drawable/bg_action_button_surface"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="remove attachment"
                         android:src="@android:drawable/ic_menu_close_clear_cancel"
                         android:padding="8dp"
@@ -165,19 +175,25 @@
                     android:layout_height="40dp"
                     android:contentDescription="attach"
                     android:src="@android:drawable/ic_menu_add"
-                    android:background="@drawable/bg_action_button_surface"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
                     android:scaleType="centerInside"
-                    app:tint="@color/on_surface_variant" />
+                    app:tint="@color/primary" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.EmotionsAi.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
-                    app:boxBackgroundMode="outline">
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp"
+                    app:boxStrokeColor="@color/stroke_soft"
+                    app:hintTextColor="@color/text_hint"
+                    app:boxBackgroundColor="@color/card_primary">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/inputText"
@@ -200,7 +216,7 @@
                     android:layout_height="40dp"
                     android:contentDescription="send"
                     android:src="@android:drawable/ic_menu_send"
-                    android:background="@drawable/bg_action_button_surface"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     app:tint="@color/primary" />

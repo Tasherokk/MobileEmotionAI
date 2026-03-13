@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="20dp"
+    android:padding="24dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
-        style="@style/TextAppearance.EmotionsAi.CardTitle"
         android:text="Фильтры аналитики"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"/>
+        android:layout_marginBottom="16dp"/>
 
     <!-- EMOTION -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/wrapEmotion"
-        style="@style/Widget.EmotionsAi.TextInputLayout.ExposedDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Эмоция">
@@ -31,7 +30,6 @@
     <!-- EVENT -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/wrapEvent"
-        style="@style/Widget.EmotionsAi.TextInputLayout.ExposedDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -46,7 +44,6 @@
     <!-- Department -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/wrapDept"
-        style="@style/Widget.EmotionsAi.TextInputLayout.ExposedDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -61,10 +58,11 @@
     <!-- APPLY -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnApply"
-        style="@style/ModernButton"
         android:text="Применить"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginTop="18dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        style="@style/Widget.Material3.Button.IconButton.Filled"/>
 
 </LinearLayout>
+    <!--не нужный файл-->

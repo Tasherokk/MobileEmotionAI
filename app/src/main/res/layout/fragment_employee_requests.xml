@@ -9,22 +9,23 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/TextAppearance.EmotionsAi.ScreenTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
         android:text="My Requests"
+        android:textColor="@color/on_surface"
+        android:textSize="28sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/btnSort"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/bg_action_button_surface"
-        android:padding="10dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_sort"
         app:tint="@color/on_surface_variant"
         app:layout_constraintBottom_toBottomOf="@id/tvTitle"
@@ -33,11 +34,15 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabsStatus"
-        style="@style/Widget.EmotionsAi.TabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
+        app:tabIndicatorColor="@color/primary"
+        app:tabIndicatorHeight="3dp"
+        app:tabRippleColor="@color/bottom_nav_indicator"
+        app:tabSelectedTextColor="@color/primary"
+        app:tabTextColor="@color/on_surface_variant"
         app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -56,8 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingTop="12dp"
-                android:paddingBottom="92dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="88dp"
                 tools:listitem="@layout/item_employee_request" />
 
             <ProgressBar
@@ -77,26 +82,29 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="88dp"
-                    android:layout_height="88dp"
-                    android:alpha="0.18"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:alpha="0.2"
                     android:src="@drawable/requests" />
 
                 <TextView
                     android:id="@+id/tvEmpty"
-                    style="@style/TextAppearance.EmotionsAi.CardTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="No requests found" />
+                    android:text="No requests found"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
                 
                 <TextView
                     android:id="@+id/tvEmptyHint"
-                    style="@style/TextAppearance.EmotionsAi.BodyMuted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Tap + to create a new request" />
+                    android:text="Tap + to create a new request"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </FrameLayout>
@@ -106,7 +114,7 @@
         android:id="@+id/btnCreate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="24dp"
         android:src="@drawable/ic_add"
         app:backgroundTint="@color/primary"
         app:tint="@color/white"

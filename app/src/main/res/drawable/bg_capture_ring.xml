@@ -2,8 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <stroke
-        android:width="2dp"
-        android:color="@color/white" />
+        android:width="4dp"
+        android:color="@color/ai_pulse" />
     <padding
         android:bottom="8dp"
         android:left="8dp"
