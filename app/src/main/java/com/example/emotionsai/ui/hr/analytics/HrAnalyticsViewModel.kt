@@ -2,6 +2,7 @@ package com.example.emotionsai.ui.hr.analytics
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
+import com.example.emotionsai.data.remote.Department
 import com.example.emotionsai.data.remote.Feedback
 import com.example.emotionsai.data.remote.HrEventDto
 import com.example.emotionsai.data.repo.FeedbackRepository
@@ -26,6 +27,9 @@ class HrAnalyticsViewModel(
     private val _events = MutableLiveData<List<HrEventDto>>(emptyList())
     val events: LiveData<List<HrEventDto>> = _events
 
+    private val _departments = MutableLiveData<List<Department>>(emptyList())
+    val departments: LiveData<List<Department>> = _departments
+
     // --- Filters (Compose state) ---
     var selectedDepartments = mutableStateOf<List<Int>>(emptyList())
     var selectedEmotions = mutableStateOf<List<String>>(emptyList())
@@ -39,6 +43,7 @@ class HrAnalyticsViewModel(
 
     fun init() {
         loadEvents()
+        loadDepartments()
         loadAnalytics()
     }
 
@@ -55,6 +60,15 @@ class HrAnalyticsViewModel(
         viewModelScope.launch {
             when (val res = repo.loadHrEvents()) {
                 is Result.Ok -> _events.value = res.value
+                is Result.Err -> { /* можно молча */ }
+            }
+        }
+    }
+
+    fun loadDepartments() {
+        viewModelScope.launch {
+            when (val res = repo.loadHrCompanyDepartments()) {
+                is Result.Ok -> _departments.value = res.value
                 is Result.Err -> { /* можно молча */ }
             }
         }

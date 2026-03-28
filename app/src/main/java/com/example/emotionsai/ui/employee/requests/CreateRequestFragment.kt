@@ -33,7 +33,6 @@ class CreateRequestFragment : Fragment(R.layout.fragment_create_request) {
             vb.dropType.setOnClickListener { vb.dropType.showDropDown() }
             vb.dropType.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) vb.dropType.showDropDown() }
             vb.dropType.setDropDownBackgroundResource(R.drawable.bg_dropdown_popup_simple)
-            toast("hrs: ${list.size}")
         }
 
         // hr list
@@ -43,7 +42,6 @@ class CreateRequestFragment : Fragment(R.layout.fragment_create_request) {
             vb.dropHr.setOnClickListener { vb.dropHr.showDropDown() }
             vb.dropHr.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) vb.dropHr.showDropDown() }
             vb.dropHr.setDropDownBackgroundResource(R.drawable.bg_dropdown_popup_simple)
-            toast("hrs: ${list.size}")
         }
 
         vm.loading.observe(viewLifecycleOwner) {

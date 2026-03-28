@@ -36,21 +36,20 @@ fun HrAnalyticsScreen(vm: HrAnalyticsViewModel) {
     val loading by vm.loading.observeAsState(false)
     val error by vm.error.observeAsState()
     val events by vm.events.observeAsState(emptyList())
+    
+    val deptDtos by vm.departments.observeAsState(emptyList())
 
-    // hardcoded departments & emotions
-    val departments = remember {
-        listOf(
-            1 to "IT",
-            2 to "Sales",
-            3 to "HR"
-        )
+    // Map Department DTOs to the (id to name) format used by the charts
+    val departments = remember(deptDtos) {
+        deptDtos.map { it.id to it.name }
     }
+    
     val emotionsOrder = remember {
         listOf("happy", "neutral", "sad", "angry", "disgust", "fear", "surprise")
     }
 
     val pie = remember(data) { data.toEmotionPiePercent(emotionsOrder) }
-    val matrix = remember(data) { data.toDepartmentEmotionCounts(departments, emotionsOrder) }
+    val matrix = remember(data, departments) { data.toDepartmentEmotionCounts(departments, emotionsOrder) }
     val kpis = remember(data) { data.toKpis() }
 
     val scrollState = rememberScrollState()

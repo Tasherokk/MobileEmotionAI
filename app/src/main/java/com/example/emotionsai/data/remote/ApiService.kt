@@ -283,6 +283,10 @@ interface ApiService {
         @Query("event_id") eventId: Int? = null,
         @Query("has_event") hasEvent: Boolean? = null
     ): List<Feedback>
+
+    @GET("api/hr/company/departments")
+    suspend fun getHrCompanyDepartments(): List<Department>
+
     // ============ HR Event Management ===========
     @GET("api/hr/events/")
     suspend fun getHrEvents(): List<HrEventDto>
