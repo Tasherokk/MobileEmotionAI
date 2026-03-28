@@ -19,6 +19,9 @@ class LoginActivity : AppCompatActivity() {
         setContentView(vb.root)
 
         vb.btnLogin.setOnClickListener {
+            // Clear previous errors when attempting a new login
+            vb.tvError.visibility = View.GONE
+            
             vm.login(
                 vb.etUsername.text?.toString().orEmpty(),
                 vb.etPassword.text?.toString().orEmpty()
@@ -26,7 +29,17 @@ class LoginActivity : AppCompatActivity() {
         }
 
         vm.error.observe(this) { err ->
-            vb.tvError.text = err
+            if (!err.isNullOrBlank()) {
+                vb.tvError.text = err
+                vb.tvError.visibility = View.VISIBLE
+            } else {
+                vb.tvError.visibility = View.GONE
+            }
+        }
+
+        vm.loading.observe(this) { isLoading ->
+            vb.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
+            vb.btnLogin.isEnabled = !isLoading
         }
 
         vm.success.observe(this) { ok ->

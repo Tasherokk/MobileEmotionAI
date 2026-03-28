@@ -18,7 +18,7 @@ class LaunchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLaunchBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
+//        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         
         binding = ActivityLaunchBinding.inflate(layoutInflater)

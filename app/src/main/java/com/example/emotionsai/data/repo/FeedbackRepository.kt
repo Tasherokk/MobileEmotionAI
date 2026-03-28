@@ -1,6 +1,7 @@
 package com.example.emotionsai.data.repo
 
 import com.example.emotionsai.data.remote.ApiService
+import com.example.emotionsai.data.remote.Department
 import com.example.emotionsai.data.remote.Feedback
 import com.example.emotionsai.data.remote.FeedbackResponse
 import com.example.emotionsai.data.remote.HrEventDto
@@ -64,6 +65,14 @@ class FeedbackRepository(
             Result.Ok(api.getHrEvents())
         } catch (e: Exception) {
             Result.Err(e.message ?: "Failed to load HR events")
+        }
+    }
+
+    suspend fun loadHrCompanyDepartments(): Result<List<Department>> {
+        return try {
+            Result.Ok(api.getHrCompanyDepartments())
+        } catch (e: Exception) {
+            Result.Err(e.message ?: "Failed to load company departments")
         }
     }
 
