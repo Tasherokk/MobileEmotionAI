@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView 
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ModernCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="12dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="6dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/stroke_soft">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,13 +18,21 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
-        <!-- Emotion Emoji -->
-        <TextView
-            android:id="@+id/tvEmotionEmoji"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="😊"
-            android:textSize="40sp" />
+        <!-- Emotion Emoji in circle -->
+        <FrameLayout
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_circle_pulse"
+            android:backgroundTint="#F1F5F9">
+
+            <TextView
+                android:id="@+id/tvEmotionEmoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="😊"
+                android:textSize="28sp"/>
+        </FrameLayout>
 
         <!-- Info Section -->
         <LinearLayout
@@ -29,16 +40,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="16dp">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:id="@+id/tvEmotionName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="HAPPY"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/on_surface"/>
 
             <TextView
                 android:id="@+id/tvDate"
@@ -46,35 +57,33 @@
                 android:layout_height="wrap_content"
                 android:text="Jan 07, 10:23"
                 android:textSize="12sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:layout_marginTop="2dp" />
+                android:textColor="@color/on_surface_variant"
+                android:layout_marginTop="3dp"/>
 
             <TextView
                 android:id="@+id/tvEvent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📌 Weekly Team Sync"
+                android:text="Weekly Team Sync"
                 android:textSize="12sp"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/primary"
                 android:layout_marginTop="4dp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
 
-        <!-- Confidence Badge -->
+        <!-- Confidence Badge (styled) -->
         <TextView
             android:id="@+id/tvConfidence"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="87%"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorPrimary"
-            android:background="?attr/colorPrimaryContainer"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:layout_marginStart="8dp" />
+            android:textColor="@color/primary"
+            android:background="@drawable/bg_tag_rounded"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:layout_marginStart="10dp"/>
 
     </LinearLayout>
 

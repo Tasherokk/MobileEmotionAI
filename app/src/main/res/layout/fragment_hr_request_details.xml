@@ -4,19 +4,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_surface">
+    android:background="@color/background">
 
-    <!-- Header -->
+    <!-- Header with Actions -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/headerCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        app:cardCornerRadius="18dp"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/stroke_soft"
-        app:cardBackgroundColor="@color/card_primary"
+        app:cardBackgroundColor="@color/surface"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="14dp">
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/tvHeader"
@@ -33,39 +33,38 @@
                 android:layout_height="wrap_content"
                 android:text="Request"
                 android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@color/text_primary"
+                android:textSize="17sp"
+                android:textColor="@color/on_surface"
                 android:maxLines="2"
                 android:ellipsize="end"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnInProgress"
+                    style="@style/ModernButton"
                     android:layout_width="0dp"
                     android:layout_height="44dp"
                     android:layout_weight="1"
-                    android:text="IN PROGRESS"
-                    android:textAllCaps="true"
+                    android:text="In Progress"
                     android:textColor="@color/white"
-                    android:backgroundTint="@color/primary"
-                    app:cornerRadius="12dp"/>
+                    android:textSize="13sp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnClose"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="44dp"
                     android:layout_weight="1"
                     android:layout_marginStart="10dp"
-                    android:text="CLOSE"
-                    android:textAllCaps="true"
+                    android:text="Close"
                     android:textColor="@color/error"
-                    app:cornerRadius="12dp"
-                    app:strokeWidth="1dp"
+                    android:textSize="13sp"
+                    app:cornerRadius="16dp"
                     app:strokeColor="@color/error"
                     app:backgroundTint="@android:color/transparent"/>
             </LinearLayout>
@@ -78,46 +77,44 @@
         android:id="@+id/rvMessages"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="8dp"
         android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/headerCard"
         app:layout_constraintBottom_toTopOf="@id/composerCard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Composer -->
+    <!-- Message Composer -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/composerCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        app:cardCornerRadius="18dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/stroke_soft"
-        app:cardBackgroundColor="@color/card_primary"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginBottom="12dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/surface"
+        app:strokeWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- ✅ ВАЖНО: вертикально, чтобы сверху показать плашку файла -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="10dp">
 
-            <!-- ✅ Attachment preview (скрыто пока файл не выбран) -->
+            <!-- Attachment preview -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/attachmentCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:visibility="gone"
-                app:cardCornerRadius="14dp"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/stroke_soft"
@@ -132,10 +129,10 @@
 
                     <ImageView
                         android:id="@+id/ivAttachmentIcon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@android:drawable/ic_menu_save"
-                        app:tint="@color/primary" />
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_attach_file"
+                        app:tint="@color/primary"/>
 
                     <TextView
                         android:id="@+id/tvAttachmentName"
@@ -144,25 +141,25 @@
                         android:layout_weight="1"
                         android:layout_marginStart="10dp"
                         android:text="file.pdf"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/on_surface"
                         android:textSize="13sp"
                         android:maxLines="1"
-                        android:ellipsize="end" />
+                        android:ellipsize="end"/>
 
                     <ImageButton
                         android:id="@+id/btnRemoveAttachment"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="remove attachment"
-                        android:src="@android:drawable/ic_menu_close_clear_cancel"
-                        android:padding="8dp"
-                        app:tint="@color/text_secondary" />
+                        android:contentDescription="Remove attachment"
+                        android:src="@drawable/ic_close"
+                        android:padding="6dp"
+                        app:tint="@color/on_surface_variant"/>
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Composer row (твой текущий, без изменений id) -->
+            <!-- Input Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -173,53 +170,50 @@
                     android:id="@+id/btnAttach"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:contentDescription="attach"
-                    android:src="@android:drawable/ic_menu_add"
+                    android:contentDescription="Attach file"
+                    android:src="@drawable/ic_attach_file"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
                     android:scaleType="centerInside"
-                    app:tint="@color/primary" />
+                    app:tint="@color/on_surface_variant"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginHorizontal="8dp"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusTopStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp"
-                    app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusBottomEnd="14dp"
+                    app:boxCornerRadiusTopStart="20dp"
+                    app:boxCornerRadiusTopEnd="20dp"
+                    app:boxCornerRadiusBottomStart="20dp"
+                    app:boxCornerRadiusBottomEnd="20dp"
                     app:boxStrokeColor="@color/stroke_soft"
-                    app:hintTextColor="@color/text_hint"
-                    app:boxBackgroundColor="@color/card_primary">
+                    app:boxBackgroundColor="@color/background">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/inputText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Сообщение"
-                        android:textColor="@color/text_primary"
+                        android:hint="Message"
+                        android:textColor="@color/on_surface"
                         android:textColorHint="@color/text_hint"
                         android:maxLines="4"
                         android:minLines="1"
                         android:inputType="textMultiLine"
                         android:imeOptions="actionSend"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp" />
+                        android:paddingVertical="12dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageButton
                     android:id="@+id/btnSend"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:contentDescription="send"
-                    android:src="@android:drawable/ic_menu_send"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="8dp"
+                    android:contentDescription="Send"
+                    android:src="@drawable/ic_send"
+                    android:background="@drawable/bg_input_send"
+                    android:padding="10dp"
                     android:scaleType="centerInside"
-                    app:tint="@color/primary" />
+                    app:tint="@color/white"/>
             </LinearLayout>
 
         </LinearLayout>
