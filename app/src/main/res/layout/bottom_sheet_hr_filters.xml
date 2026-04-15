@@ -1,68 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="24dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/surface"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="32dp">
+
+    <!-- Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:background="@color/stroke_soft"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"/>
 
     <TextView
-        android:text="Фильтры аналитики"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"/>
+        android:text="Filter Analytics"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/on_surface"
+        android:layout_marginBottom="20dp"/>
 
-    <!-- EMOTION -->
+    <!-- Emotion -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/wrapEmotion"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Эмоция">
+        android:hint="Emotion"
+        app:boxCornerRadiusTopStart="14dp"
+        app:boxCornerRadiusTopEnd="14dp"
+        app:boxCornerRadiusBottomStart="14dp"
+        app:boxCornerRadiusBottomEnd="14dp">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/inputEmotion"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="none"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- EVENT -->
+    <!-- Event -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/wrapEvent"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:hint="Ивент">
+        android:layout_marginTop="14dp"
+        android:hint="Event"
+        app:boxCornerRadiusTopStart="14dp"
+        app:boxCornerRadiusTopEnd="14dp"
+        app:boxCornerRadiusBottomStart="14dp"
+        app:boxCornerRadiusBottomEnd="14dp">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/inputEvent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="none"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Department -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/wrapDept"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:hint="Отдел">
+        android:layout_marginTop="14dp"
+        android:hint="Department"
+        app:boxCornerRadiusTopStart="14dp"
+        app:boxCornerRadiusTopEnd="14dp"
+        app:boxCornerRadiusBottomStart="14dp"
+        app:boxCornerRadiusBottomEnd="14dp">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/inputDept"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="none"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- APPLY -->
+    <!-- Apply Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnApply"
-        android:text="Применить"
+        style="@style/ModernButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        style="@style/Widget.Material3.Button.IconButton.Filled"/>
+        android:layout_height="52dp"
+        android:layout_marginTop="24dp"
+        android:text="Apply Filters"
+        android:textSize="16sp"/>
 
 </LinearLayout>
-    <!--не нужный файл-->

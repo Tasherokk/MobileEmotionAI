@@ -7,91 +7,108 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:text="Event Management"
-        android:textColor="@color/on_surface"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/headerCard"
-        style="@style/ModernCard"
+    <!-- Header Section -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardElevation="4dp"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputSearchWrapper"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Event Management"
+                    android:textColor="@color/on_surface"
+                    android:textSize="28sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Create and manage events"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Search Bar -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputSearchWrapper"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search events…"
+            app:startIconDrawable="@drawable/ic_search"
+            app:startIconTint="@color/on_surface_variant"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusBottomEnd="20dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search events by name..."
-                app:startIconDrawable="@drawable/ic_search"
-                app:boxCornerRadiusTopStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusBottomEnd="16dp">
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFilters"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Advanced Filters"
+            android:textColor="@color/primary"
+            app:icon="@drawable/ic_filter_list"
+            app:iconTint="@color/primary"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnFilters"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Advanced Filters"
-                app:icon="@android:drawable/ic_menu_sort_by_size"
-                app:iconTint="@color/primary"
-                android:textColor="@color/primary"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvEvents"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="88dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerCard"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
         tools:listitem="@layout/item_hr_event" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnCreateEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:src="@drawable/ic_add"
+        android:layout_margin="20dp"
+        android:text="New Event"
+        app:icon="@drawable/ic_add"
         app:backgroundTint="@color/primary"
-        app:tint="@color/white"
+        android:textColor="@color/white"
+        app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- For compatibility with existing ViewBinding code -->
-    <View android:id="@+id/headerLayout" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

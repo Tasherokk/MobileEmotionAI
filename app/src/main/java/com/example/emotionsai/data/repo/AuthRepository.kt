@@ -5,6 +5,7 @@ import com.example.emotionsai.data.remote.ApiService
 import com.example.emotionsai.data.remote.LoginRequest
 import com.example.emotionsai.data.remote.RegisterRequest
 import com.example.emotionsai.util.Result
+import retrofit2.HttpException
 
 class AuthRepository(
     private val api: ApiService,
@@ -15,6 +16,9 @@ class AuthRepository(
             val tokens = api.login(LoginRequest(username.trim().lowercase(), password))
             tokenStorage.saveTokens(tokens.access, tokens.refresh, tokens.user.role)
             Result.Ok(Unit)
+        } catch (e: HttpException) {
+            if (e.code() == 400 || e.code() == 401) Result.Err("Invalid credentials")
+            else Result.Err("Login failed (${e.code()})")
         } catch (e: Exception) {
             Result.Err(e.message ?: "Login failed")
         }
