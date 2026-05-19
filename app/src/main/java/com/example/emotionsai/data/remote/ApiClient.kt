@@ -9,8 +9,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiClient(
     private val tokenStorage: TokenStorage
 ) {
-    // IMPORTANT for emulator:
-    private val baseUrl = "http://185.5.206.121/"
+    // Backend base URL
+    private val baseUrl = "https://emotions.darasoft.kz/"
 
     private fun logging(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {

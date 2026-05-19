@@ -26,7 +26,7 @@ data class WsMessageDto(
 )
 
 class ChatWebSocket(
-    private val baseWsUrl: String = "ws://185.5.206.121/ws/chat/"
+    private val baseWsUrl: String = "wss://emotions.darasoft.kz/ws/chat/"
 ) {
     private val gson = Gson()
     private val client = OkHttpClient.Builder()
