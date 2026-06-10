@@ -3,7 +3,7 @@ package com.example.emotionsai.ui.hr.events
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import com.example.emotionsai.util.snack
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -45,7 +45,7 @@ class HrEventsFragment : Fragment(R.layout.fragment_hr_events) {
             },
             onDelete = { event ->
                 if (!vm.isActive(event)) {
-                    Toast.makeText(requireContext(), "Only active events are deletable", Toast.LENGTH_SHORT).show()
+                    snack("Only active events are deletable")
                 } else {
                     vm.deleteEvent(event.id)
                 }
@@ -75,7 +75,7 @@ class HrEventsFragment : Fragment(R.layout.fragment_hr_events) {
         vm.events.observe(viewLifecycleOwner) { adapter.submitList(it) }
         vm.error.observe(viewLifecycleOwner) { msg ->
             if (!msg.isNullOrBlank())
-                Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                snack(msg, long = true)
         }
         vm.filter.observe(viewLifecycleOwner) { f ->
             vb.btnFilters.text = buildString {

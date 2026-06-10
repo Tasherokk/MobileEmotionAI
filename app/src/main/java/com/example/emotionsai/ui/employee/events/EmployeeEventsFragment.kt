@@ -2,7 +2,7 @@ package com.example.emotionsai.ui.employee.events
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import com.example.emotionsai.util.snack
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -46,7 +46,7 @@ class EmployeeEventsFragment : Fragment(R.layout.fragment_employee_events) {
         vm.error.observe(viewLifecycleOwner) {
             vb.tvError.visibility = if (it.isNullOrBlank()) View.GONE else View.VISIBLE
             vb.tvError.text = it ?: ""
-            if (!it.isNullOrBlank()) Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            if (!it.isNullOrBlank()) snack(it)
         }
 
         vm.events.observe(viewLifecycleOwner) { list ->

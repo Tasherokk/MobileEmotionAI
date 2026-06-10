@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.View
-import android.widget.Toast
+import com.example.emotionsai.util.snack
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -124,8 +124,7 @@ class EmployeeRequestDetailsFragment : Fragment(R.layout.fragment_employee_reque
         vb.attachmentCard.visibility = View.GONE
     }
 
-    private fun toast(s: String) =
-        Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show()
+    private fun toast(s: String) = snack(s)
 
     override fun onDestroyView() {
         super.onDestroyView()

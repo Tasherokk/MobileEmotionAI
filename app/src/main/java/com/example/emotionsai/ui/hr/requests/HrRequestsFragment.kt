@@ -2,7 +2,7 @@ package com.example.emotionsai.ui.hr.requests
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import com.example.emotionsai.util.snack
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -54,7 +54,7 @@ class HrRequestsFragment : Fragment(R.layout.fragment_hr_requests) {
 
         vm.error.observe(viewLifecycleOwner) {
             if (!it.isNullOrBlank()) {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                snack(it)
             }
         }
 

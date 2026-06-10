@@ -2,7 +2,7 @@ package com.example.emotionsai.ui.hr.events
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import com.example.emotionsai.util.snack
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -132,19 +132,19 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
             val endTime = vb.inputEndTime.text?.toString()
 
             if (title.isBlank()) {
-                Toast.makeText(requireContext(), "Enter title", Toast.LENGTH_SHORT).show()
+                snack("Enter title")
                 return@setOnClickListener
             }
 
             val cid = companyId
             if (cid == null) {
-                Toast.makeText(requireContext(), "No company", Toast.LENGTH_SHORT).show()
+                snack("No company")
                 return@setOnClickListener
             }
 
             val startIso = buildIsoDateTimeOrNull(startDate, startTime)
             if (startIso == null) {
-                Toast.makeText(requireContext(), "Pick start date & time", Toast.LENGTH_SHORT).show()
+                snack("Pick start date & time")
                 return@setOnClickListener
             }
 
@@ -185,11 +185,11 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
         vm.success.observe(viewLifecycleOwner) { ok ->
             if (ok == true) {
                 vm.successHandled()
-                Toast.makeText(requireContext(), if (isEditMode) "Event updated!" else "Event created!", Toast.LENGTH_SHORT).show()
+                snack(if (isEditMode) "Event updated!" else "Event created!")
                 findNavController().popBackStack()
             }
         }
-        vm.error.observe(viewLifecycleOwner) { if (!it.isNullOrEmpty()) Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
+        vm.error.observe(viewLifecycleOwner) { if (!it.isNullOrEmpty()) snack(it, long = true) }
     }
 
     private fun buildIsoDateTimeOrNull(date: String?, time: String?): String? {

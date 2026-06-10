@@ -3,7 +3,7 @@ package com.example.emotionsai.ui.employee.requests
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Toast
+import com.example.emotionsai.util.snack
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -49,7 +49,7 @@ class CreateRequestFragment : Fragment(R.layout.fragment_create_request) {
         }
 
         vm.error.observe(viewLifecycleOwner) {
-            if (!it.isNullOrBlank()) Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            if (!it.isNullOrBlank()) snack(it)
         }
 
         vm.created.observe(viewLifecycleOwner) { created ->
@@ -76,8 +76,7 @@ class CreateRequestFragment : Fragment(R.layout.fragment_create_request) {
         vm.loadRefs() // types + hr-list
     }
 
-    private fun toast(s: String) =
-        Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show()
+    private fun toast(s: String) = snack(s)
 
     override fun onDestroyView() {
         super.onDestroyView()

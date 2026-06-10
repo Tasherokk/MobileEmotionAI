@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
-import android.widget.Toast
+import com.example.emotionsai.util.snack
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -63,7 +63,7 @@ class FaceLoginCameraFragment : Fragment() {
     ) { granted ->
         if (granted) startCamera()
         else {
-            Toast.makeText(requireContext(), "Camera permission is required", Toast.LENGTH_SHORT).show()
+            snack("Camera permission is required")
             goLoginHard(clearTokens = false)
         }
     }
@@ -145,7 +145,7 @@ class FaceLoginCameraFragment : Fragment() {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(viewLifecycleOwner, cameraSelector, preview, imageCapture)
             } catch (_: Exception) {
-                Toast.makeText(requireContext(), "Camera initialization failed", Toast.LENGTH_SHORT).show()
+                snack("Camera initialization failed")
                 goLoginHard(clearTokens = false)
             }
         }, ContextCompat.getMainExecutor(requireContext()))
@@ -162,7 +162,7 @@ class FaceLoginCameraFragment : Fragment() {
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
-                    Toast.makeText(requireContext(), "Photo capture failed", Toast.LENGTH_SHORT).show()
+                    snack("Photo capture failed")
                 }
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     verifyFace(photoFile)
@@ -201,7 +201,7 @@ class FaceLoginCameraFragment : Fragment() {
                         authRepo.logout()
                         goLoginHard(clearTokens = false)
                     } else {
-                        Toast.makeText(context, "Face doesn't match. $attemptsLeft attempts left", Toast.LENGTH_SHORT).show()
+                        snack("Face doesn't match. $attemptsLeft attempts left")
                     }
                 }
                 is PhotoVerifyResult.Error -> {
@@ -209,7 +209,7 @@ class FaceLoginCameraFragment : Fragment() {
                         authRepo.logout()
                         goLoginHard(clearTokens = false)
                     } else {
-                        Toast.makeText(context, "Verification error", Toast.LENGTH_SHORT).show()
+                        snack("Verification error")
                     }
                 }
             }

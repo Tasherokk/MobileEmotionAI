@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import com.example.emotionsai.util.snack
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -112,8 +112,7 @@ class HrRequestDetailsFragment : Fragment(R.layout.fragment_hr_request_details) 
         return f
     }
 
-    private fun toast(s: String) =
-        Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show()
+    private fun toast(s: String) = snack(s)
 
     override fun onDestroyView() {
         super.onDestroyView()
