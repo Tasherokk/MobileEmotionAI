@@ -5,6 +5,7 @@ import com.example.emotionsai.data.remote.Company
 import com.example.emotionsai.data.remote.Department
 import com.example.emotionsai.data.remote.HrEventDto
 import com.example.emotionsai.util.Result
+import com.example.emotionsai.util.toUserMessage
 
 class ReferenceRepository(
     private val api: ApiService
@@ -13,7 +14,7 @@ class ReferenceRepository(
         return try {
             Result.Ok(api.getCompanies())
         } catch (e: Exception) {
-            Result.Err(e.message ?: "Failed to load companies")
+            Result.Err(e.toUserMessage())
         }
     }
 
@@ -21,7 +22,7 @@ class ReferenceRepository(
         return try {
             Result.Ok(api.getDepartments(companyId))
         } catch (e: Exception) {
-            Result.Err(e.message ?: "Failed to load departments")
+            Result.Err(e.toUserMessage())
         }
     }
 

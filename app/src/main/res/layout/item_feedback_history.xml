@@ -23,7 +23,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:background="@drawable/bg_circle_pulse"
-            android:backgroundTint="#F1F5F9">
+            android:backgroundTint="@color/card_surface">
 
             <TextView
                 android:id="@+id/tvEmotionEmoji"

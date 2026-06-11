@@ -11,4 +11,10 @@ class SettingsStorage(context: Context) {
     fun setFaceIdEnabled(enabled: Boolean) {
         sp.edit { putBoolean("face_id_enabled", enabled) }
     }
+
+    fun isDarkModeEnabled(): Boolean = sp.getBoolean("dark_mode_enabled", false)
+
+    fun setDarkModeEnabled(enabled: Boolean) {
+        sp.edit { putBoolean("dark_mode_enabled", enabled) }
+    }
 }

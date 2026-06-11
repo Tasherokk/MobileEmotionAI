@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.emotionsai.R
@@ -22,12 +23,23 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _vb = FragmentProfileBinding.bind(view)
-        vb.swFaceLogin.isChecked = ServiceLocator.settingsStorage(requireContext()).isFaceIdEnabled()
-        
+        val settings = ServiceLocator.settingsStorage(requireContext())
+
+        vb.swFaceLogin.isChecked = settings.isFaceIdEnabled()
+        vb.swDarkMode.isChecked = settings.isDarkModeEnabled()
+
         vb.btnLogout.setOnClickListener { showLogoutDialog() }
-        
+
         vb.swFaceLogin.setOnClickListener {
-            ServiceLocator.settingsStorage(requireContext()).setFaceIdEnabled(vb.swFaceLogin.isChecked)
+            settings.setFaceIdEnabled(vb.swFaceLogin.isChecked)
+        }
+
+        vb.swDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            settings.setDarkModeEnabled(isChecked)
+            AppCompatDelegate.setDefaultNightMode(
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            )
         }
         
         vm.loading.observe(viewLifecycleOwner) { loading ->

@@ -7,6 +7,7 @@ import com.example.emotionsai.data.remote.EventCreateRequest
 import com.example.emotionsai.data.remote.HrEventDetailsDto
 import com.example.emotionsai.data.remote.HrEventDto
 import com.example.emotionsai.util.Result
+import com.example.emotionsai.util.toUserMessage
 
 
 class EventRepository(
@@ -15,45 +16,45 @@ class EventRepository(
     suspend fun loadMyEvents(): Result<List<EmployeeEventDto>> = try {
         Result.Ok(api.getMyEmployeeEvents())
     } catch (e: Exception) {
-        Result.Err(e.message ?: "Failed to load employee events")
+        Result.Err(e.toUserMessage())
     }
 
     // ===== HR: employees =====
     suspend fun getCompanyEmployees(): Result<List<EmployeeDto>> = try {
         Result.Ok(api.getCompanyEmployees())
     } catch (e: Exception) {
-        Result.Err(e.message ?: "Failed to load employees")
+        Result.Err(e.toUserMessage())
     }
 
     // ===== HR: events =====
     suspend fun loadHrEvents(): Result<List<HrEventDto>> = try {
         Result.Ok(api.getHrEvents())
     } catch (e: Exception) {
-        Result.Err(e.message ?: "Failed to load HR events")
+        Result.Err(e.toUserMessage())
     }
 
     suspend fun createHrEvent(req: EventCreateRequest): Result<HrEventDto> = try {
         Result.Ok(api.createHrEvent(req))
     } catch (e: Exception) {
-        Result.Err(e.message ?: "Failed to create event")
+        Result.Err(e.toUserMessage())
     }
 
     suspend fun updateHrEvent(id: Int, req: EventCreateRequest): Result<HrEventDto> = try {
         Result.Ok(api.updateHrEvent(id, req))
     } catch (e: Exception) {
-        Result.Err(e.message ?: "Failed to update event")
+        Result.Err(e.toUserMessage())
     }
 
     suspend fun deleteHrEvent(id: Int): Result<Unit> = try {
         api.deleteHrEvent(id)
         Result.Ok(Unit)
     } catch (e: Exception) {
-        Result.Err(e.message ?: "Failed to delete event")
+        Result.Err(e.toUserMessage())
     }
     suspend fun getHrEventDetails(id: Int): Result<HrEventDetailsDto> = try {
         Result.Ok(api.getHrEventDetails(id))
     } catch (e: Exception) {
-        Result.Err(e.message ?: "Failed to load event details")
+        Result.Err(e.toUserMessage())
     }
 
 }

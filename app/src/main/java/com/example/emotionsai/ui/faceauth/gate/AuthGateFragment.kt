@@ -37,15 +37,17 @@ class AuthGateFragment : Fragment(R.layout.fragment_auth_gate) {
                     }
                 }
                 is Result.Err -> {
-                    // logout только если реально auth умер
-                    val msg = r.message
-                    val isAuthDead = msg.contains("401") || msg.contains("403") || msg.contains("HTTP_401") || msg.contains("HTTP_403")
-
+                    val isAuthDead = r.message.contains("HTTP_401") || r.message.contains("HTTP_403")
                     if (isAuthDead) {
                         authRepo.logout()
                         goLogin()
                     } else {
-                        goLogin()
+                        // Network/server error — token may still be valid, proceed to app
+                        if (settings.isFaceIdEnabled()) {
+                            findNavController().navigate(R.id.action_authGate_to_faceLogin)
+                        } else {
+                            findNavController().navigate(R.id.action_authGate_to_home)
+                        }
                     }
                 }
             }

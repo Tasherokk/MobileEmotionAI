@@ -5,6 +5,7 @@ import com.example.emotionsai.data.remote.ApiService
 import com.example.emotionsai.data.remote.LoginRequest
 import com.example.emotionsai.data.remote.RegisterRequest
 import com.example.emotionsai.util.Result
+import com.example.emotionsai.util.toUserMessage
 import retrofit2.HttpException
 
 class AuthRepository(
@@ -20,7 +21,7 @@ class AuthRepository(
             if (e.code() == 400 || e.code() == 401) Result.Err("Invalid credentials")
             else Result.Err("Login failed (${e.code()})")
         } catch (e: Exception) {
-            Result.Err(e.message ?: "Login failed")
+            Result.Err(e.toUserMessage())
         }
     }
 
@@ -30,7 +31,7 @@ class AuthRepository(
             tokenStorage.saveTokens(tokens.access, tokens.refresh, tokens.user.role)
             Result.Ok(Unit)
         } catch (e: Exception) {
-            Result.Err(e.message ?: "Register failed")
+            Result.Err(e.toUserMessage())
         }
     }
 

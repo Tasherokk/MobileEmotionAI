@@ -3,6 +3,7 @@ package com.example.emotionsai.data.repo
 import com.example.emotionsai.data.remote.ApiService
 import com.example.emotionsai.data.remote.MeResponse
 import com.example.emotionsai.util.Result
+import com.example.emotionsai.util.toUserMessage
 import retrofit2.HttpException
 
 class UserRepository(
@@ -13,6 +14,8 @@ class UserRepository(
             Result.Ok(api.me())
         } catch (e: HttpException) {
             Result.Err("HTTP_${e.code()}")
+        } catch (e: Exception) {
+            Result.Err(e.toUserMessage())
         }
     }
 }

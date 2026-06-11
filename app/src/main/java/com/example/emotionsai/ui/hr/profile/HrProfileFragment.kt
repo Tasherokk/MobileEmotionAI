@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.emotionsai.R
@@ -25,9 +26,18 @@ class HrProfileFragment : Fragment(R.layout.fragment_hr_profile) {
         val settings = ServiceLocator.settingsStorage(requireContext())
 
         vb.swFaceLogin.isChecked = settings.isFaceIdEnabled()
+        vb.swDarkMode.isChecked = settings.isDarkModeEnabled()
 
         vb.swFaceLogin.setOnCheckedChangeListener { _, isChecked ->
             settings.setFaceIdEnabled(isChecked)
+        }
+
+        vb.swDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            settings.setDarkModeEnabled(isChecked)
+            AppCompatDelegate.setDefaultNightMode(
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            )
         }
 
         vb.btnLogout.setOnClickListener { showLogoutDialog() }

@@ -6,6 +6,7 @@ import com.example.emotionsai.data.remote.Feedback
 import com.example.emotionsai.data.remote.FeedbackResponse
 import com.example.emotionsai.data.remote.HrEventDto
 import com.example.emotionsai.util.Result
+import com.example.emotionsai.util.toUserMessage
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -29,7 +30,7 @@ class FeedbackRepository(
             val response = api.submitFeedback(body, eventIdBody)
             Result.Ok(response)
         } catch (e: Exception) {
-            Result.Err("Unable to analyze emotion: ${e.message}")
+            Result.Err(e.toUserMessage())
         }
     }
     suspend fun loadFeedbacks(
@@ -57,14 +58,14 @@ class FeedbackRepository(
             Result.Ok(data)
 
         } catch (e: Exception) {
-            Result.Err(e.message ?: "Failed to load analytics feedbacks")
+            Result.Err(e.toUserMessage())
         }
     }
     suspend fun loadHrEvents(): Result<List<HrEventDto>> {
         return try {
             Result.Ok(api.getHrEvents())
         } catch (e: Exception) {
-            Result.Err(e.message ?: "Failed to load HR events")
+            Result.Err(e.toUserMessage())
         }
     }
 
@@ -72,7 +73,7 @@ class FeedbackRepository(
         return try {
             Result.Ok(api.getHrCompanyDepartments())
         } catch (e: Exception) {
-            Result.Err(e.message ?: "Failed to load company departments")
+            Result.Err(e.toUserMessage())
         }
     }
 
